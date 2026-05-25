@@ -1,0 +1,41 @@
+<odoo>
+    <record id="view_account_analytic_full_cost_recompute_wizard" model="ir.ui.view">
+        <field name="name">account.analytic.full.cost.recompute.wizard.form</field>
+        <field name="model">account.analytic.full.cost.recompute.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Recompute analytic full cost">
+                <sheet>
+                    <group>
+                        <field name="company_id" groups="analytic.group_analytic_accounting"/>
+                        <field name="recompute_lines" groups="analytic.group_analytic_accounting"/>
+                    </group>
+                    <footer>
+                        <button name="action_recompute"
+                                string="Recompute"
+                                type="object"
+                                class="btn-primary"
+                                groups="analytic.group_analytic_accounting"/>
+                        <button string="Cancel"
+                                special="cancel"
+                                class="btn-secondary"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_account_analytic_full_cost_recompute_wizard" model="ir.actions.act_window">
+        <field name="name">Recompute analytic full cost</field>
+        <field name="res_model">account.analytic.full.cost.recompute.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="view_account_analytic_full_cost_recompute_wizard"/>
+        <field name="context">{}</field>
+    </record>
+
+    <menuitem id="menu_account_analytic_full_cost_recompute_wizard"
+              name="Recompute analytic full cost"
+              parent="account.menu_analytic_accounting"
+              action="action_account_analytic_full_cost_recompute_wizard"
+              groups="analytic.group_analytic_accounting"/>
+</odoo>

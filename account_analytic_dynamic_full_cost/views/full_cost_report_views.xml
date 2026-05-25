@@ -1,0 +1,71 @@
+<odoo>
+    <record id="view_account_analytic_full_cost_report_tree" model="ir.ui.view">
+        <field name="name">account.analytic.full.cost.report.list</field>
+        <field name="model">account.analytic.full.cost.report</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="analysis_date"/>
+                <field name="window_start"/>
+                <field name="date"/>
+                <field name="account_id"/>
+                <field name="amount" sum="Direct cost"/>
+                <field name="full_cost_amount" sum="Full cost"/>
+                <field name="full_cost_delta" sum="Delta"/>
+                <field name="full_cost_role"/>
+                <field name="full_cost_multiplier"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_account_analytic_full_cost_report_pivot" model="ir.ui.view">
+        <field name="name">account.analytic.full.cost.report.pivot</field>
+        <field name="model">account.analytic.full.cost.report</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="account_id" type="row"/>
+                <field name="amount" type="measure"/>
+                <field name="full_cost_amount" type="measure"/>
+                <field name="full_cost_delta" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_account_analytic_full_cost_report_search" model="ir.ui.view">
+        <field name="name">account.analytic.full.cost.report.search</field>
+        <field name="model">account.analytic.full.cost.report</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="analysis_date"/>
+                <field name="account_id"/>
+                <field name="company_id"/>
+                <filter name="group_analysis_date"
+                        string="Analysis Date"
+                        context="{'group_by': 'analysis_date'}"/>
+                <filter name="group_account"
+                        string="Analytic Account"
+                        context="{'group_by': 'account_id'}"/>
+                <filter name="group_role"
+                        string="Full Cost Role"
+                        context="{'group_by': 'full_cost_role'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_account_analytic_full_cost_report" model="ir.actions.act_window">
+        <field name="name">Historical Full-Cost Analysis</field>
+        <field name="res_model">account.analytic.full.cost.report</field>
+        <field name="view_mode">pivot,list</field>
+        <field name="search_view_id" ref="view_account_analytic_full_cost_report_search"/>
+        <field name="context">{
+            'search_default_group_analysis_date': 1,
+            'search_default_group_account': 2,
+        }</field>
+    </record>
+
+    <menuitem id="menu_account_analytic_full_cost_report"
+              name="Historical Full-Cost Analysis"
+              parent="account.account_reports_management_menu"
+              action="action_account_analytic_full_cost_analysis_wizard"
+              sequence="20"
+              groups="analytic.group_analytic_accounting"/>
+</odoo>

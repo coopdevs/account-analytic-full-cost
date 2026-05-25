@@ -1,0 +1,7 @@
+<odoo>
+    <record id="base.main_company" model="res.company">
+        <field name="full_cost_period">biannual</field>
+        <field name="full_cost_weight_basis">expenses</field>
+        <field name="full_cost_window_days">60</field>
+    </record>
+</odoo>

@@ -1,0 +1,22 @@
+<odoo>
+    <record id="view_company_form_analytic_full_cost" model="ir.ui.view">
+        <field name="name">res.company.form.analytic.full.cost</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Analytic Full Cost">
+                    <group>
+                        <field name="full_cost_period"
+                               groups="analytic.group_analytic_accounting"/>
+                        <field name="full_cost_weight_basis"
+                               groups="analytic.group_analytic_accounting"/>
+                        <field name="full_cost_window_days"
+                               invisible="(full_cost_period != 'rolling')"
+                               groups="analytic.group_analytic_accounting"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

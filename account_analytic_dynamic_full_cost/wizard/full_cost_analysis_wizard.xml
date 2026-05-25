@@ -1,0 +1,33 @@
+<odoo>
+    <record id="view_account_analytic_full_cost_analysis_wizard" model="ir.ui.view">
+        <field name="name">account.analytic.full.cost.analysis.wizard.form</field>
+        <field name="model">account.analytic.full.cost.analysis.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Historical Full-Cost Analysis">
+                <sheet>
+                    <group>
+                        <field name="company_id"/>
+                        <field name="analysis_date"/>
+                    </group>
+                    <footer>
+                        <button name="action_open_report"
+                                string="Analyze"
+                                type="object"
+                                class="btn-primary"/>
+                        <button string="Cancel"
+                                special="cancel"
+                                class="btn-secondary"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_account_analytic_full_cost_analysis_wizard" model="ir.actions.act_window">
+        <field name="name">Historical Full-Cost Analysis</field>
+        <field name="res_model">account.analytic.full.cost.analysis.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="view_account_analytic_full_cost_analysis_wizard"/>
+    </record>
+</odoo>

@@ -1,0 +1,91 @@
+<odoo>
+    <record id="plan_full_cost_demo_portfolio" model="account.analytic.plan">
+        <field name="name">Full Cost Demo Portfolio</field>
+        <field name="parent_id" ref="analytic.analytic_plan_projects"/>
+        <field name="full_cost_role">productive</field>
+    </record>
+
+    <record id="plan_odoo_line" model="account.analytic.plan">
+        <field name="name">Odoo Line</field>
+        <field name="parent_id" ref="account_analytic_dynamic_full_cost.plan_full_cost_demo_portfolio"/>
+        <field name="full_cost_role">productive</field>
+    </record>
+
+    <record id="plan_odoo_projects" model="account.analytic.plan">
+        <field name="name">Odoo Projects</field>
+        <field name="parent_id" ref="account_analytic_dynamic_full_cost.plan_odoo_line"/>
+        <field name="full_cost_role">productive</field>
+    </record>
+
+    <record id="plan_odoo_implementations" model="account.analytic.plan">
+        <field name="name">Odoo Implementations</field>
+        <field name="parent_id" ref="account_analytic_dynamic_full_cost.plan_odoo_projects"/>
+        <field name="full_cost_role">productive</field>
+    </record>
+
+    <record id="plan_odoo_developments" model="account.analytic.plan">
+        <field name="name">Odoo Developments</field>
+        <field name="parent_id" ref="account_analytic_dynamic_full_cost.plan_odoo_projects"/>
+        <field name="full_cost_role">productive</field>
+    </record>
+
+    <record id="plan_odoo_rd" model="account.analytic.plan">
+        <field name="name">Odoo R&amp;D</field>
+        <field name="parent_id" ref="account_analytic_dynamic_full_cost.plan_odoo_line"/>
+        <field name="full_cost_role">reproductive</field>
+    </record>
+
+    <record id="plan_bi_line" model="account.analytic.plan">
+        <field name="name">BI Line</field>
+        <field name="parent_id" ref="account_analytic_dynamic_full_cost.plan_full_cost_demo_portfolio"/>
+        <field name="full_cost_role">productive</field>
+    </record>
+
+    <record id="plan_bi_projects" model="account.analytic.plan">
+        <field name="name">BI Projects</field>
+        <field name="parent_id" ref="account_analytic_dynamic_full_cost.plan_bi_line"/>
+        <field name="full_cost_role">productive</field>
+    </record>
+
+    <record id="plan_bi_sales" model="account.analytic.plan">
+        <field name="name">BI Sales</field>
+        <field name="parent_id" ref="account_analytic_dynamic_full_cost.plan_bi_line"/>
+        <field name="full_cost_role">reproductive</field>
+    </record>
+
+    <record id="plan_structure" model="account.analytic.plan">
+        <field name="name">Structure</field>
+        <field name="parent_id" ref="account_analytic_dynamic_full_cost.plan_full_cost_demo_portfolio"/>
+        <field name="full_cost_role">reproductive</field>
+    </record>
+
+    <record id="plan_utilities" model="account.analytic.plan">
+        <field name="name">Utilities</field>
+        <field name="parent_id" ref="account_analytic_dynamic_full_cost.plan_structure"/>
+        <field name="full_cost_role">reproductive</field>
+    </record>
+
+    <record id="plan_administration" model="account.analytic.plan">
+        <field name="name">Administration</field>
+        <field name="parent_id" ref="account_analytic_dynamic_full_cost.plan_structure"/>
+        <field name="full_cost_role">reproductive</field>
+    </record>
+
+    <record id="plan_non_explored_dimension" model="account.analytic.plan">
+        <field name="name">Management Tags</field>
+        <field name="full_cost_role">not_analyzed</field>
+    </record>
+
+    <record id="plan_training_tag" model="account.analytic.plan">
+        <field name="name">Training Tag</field>
+        <field name="parent_id" ref="account_analytic_dynamic_full_cost.plan_non_explored_dimension"/>
+        <field name="full_cost_role">productive</field>
+    </record>
+
+    <record id="plan_internal_governance_tag" model="account.analytic.plan">
+        <field name="name">Internal Governance Tag</field>
+        <field name="parent_id" ref="account_analytic_dynamic_full_cost.plan_non_explored_dimension"/>
+        <field name="full_cost_role">productive</field>
+    </record>
+
+</odoo>

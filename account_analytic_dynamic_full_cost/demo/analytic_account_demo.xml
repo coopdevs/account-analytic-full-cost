@@ -1,0 +1,79 @@
+<odoo>
+    <record id="aa_pkg_a_project_gamma" model="account.analytic.account">
+        <field name="name">DEMO - Odoo Implementations</field>
+        <field name="plan_id" ref="account_analytic_dynamic_full_cost.plan_odoo_implementations"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <record id="aa_pkg_b_project_alpha" model="account.analytic.account">
+        <field name="name">DEMO - Odoo Developments</field>
+        <field name="plan_id" ref="account_analytic_dynamic_full_cost.plan_odoo_developments"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <record id="aa_custom_project_delta" model="account.analytic.account">
+        <field name="name">DEMO - BI Projects</field>
+        <field name="plan_id" ref="account_analytic_dynamic_full_cost.plan_bi_projects"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <record id="aa_internal_platform" model="account.analytic.account">
+        <field name="name">DEMO - Odoo R&amp;D</field>
+        <field name="plan_id" ref="account_analytic_dynamic_full_cost.plan_odoo_rd"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <record id="aa_support_client_beta" model="account.analytic.account">
+        <field name="name">DEMO - BI Sales</field>
+        <field name="plan_id" ref="account_analytic_dynamic_full_cost.plan_bi_sales"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <record id="aa_support_evolution_gamma" model="account.analytic.account">
+        <field name="name">DEMO - BI Projects - Additional Services</field>
+        <field name="plan_id" ref="account_analytic_dynamic_full_cost.plan_bi_projects"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <record id="aa_ga_overhead" model="account.analytic.account">
+        <field name="name">DEMO - Administration</field>
+        <field name="plan_id" ref="account_analytic_dynamic_full_cost.plan_administration"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <record id="aa_client_projects_overhead" model="account.analytic.account">
+        <field name="name">DEMO - Utilities</field>
+        <field name="plan_id" ref="account_analytic_dynamic_full_cost.plan_utilities"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <record id="aa_delivery_mgmt_overhead" model="account.analytic.account">
+        <field name="name">DEMO - Shared Structure</field>
+        <field name="plan_id" ref="account_analytic_dynamic_full_cost.plan_structure"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <record id="aa_client_projects_direct" model="account.analytic.account">
+        <field name="name">DEMO - Odoo Projects</field>
+        <field name="plan_id" ref="account_analytic_dynamic_full_cost.plan_odoo_projects"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <record id="aa_software_delivery_direct" model="account.analytic.account">
+        <field name="name">DEMO - Odoo Line</field>
+        <field name="plan_id" ref="account_analytic_dynamic_full_cost.plan_odoo_line"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <record id="aa_training_tag" model="account.analytic.account">
+        <field name="name">DEMO - Training Tag</field>
+        <field name="plan_id" ref="account_analytic_dynamic_full_cost.plan_training_tag"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <record id="aa_internal_governance_tag" model="account.analytic.account">
+        <field name="name">DEMO - Internal Governance Tag</field>
+        <field name="plan_id" ref="account_analytic_dynamic_full_cost.plan_internal_governance_tag"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+</odoo>

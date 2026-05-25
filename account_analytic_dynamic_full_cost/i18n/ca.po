@@ -1,0 +1,640 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_analytic_dynamic_full_cost
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-05-09 00:00+0000\n"
+"PO-Revision-Date: 2026-05-09 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: Catalan\n"
+"Language: ca\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Analytic Dynamic Full Cost"
+msgstr "Cost complet dinàmic analític"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Compute and store dynamic full cost in analytic lines"
+msgstr "Calcula i desa el cost complet dinàmic a les línies analítiques"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Analytic Full Cost"
+msgstr "Cost complet analític"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Analytic Plan"
+msgstr "Pla analític"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Annual window"
+msgstr "Finestra anual"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Two-year window"
+msgstr "Finestra bianual"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Three-year window"
+msgstr "Finestra trianual"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Cancel"
+msgstr "Cancel·la"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Company"
+msgstr "Companyia"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Full Cost Amount"
+msgstr "Import de cost complet"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Full Cost Multiplier"
+msgstr "Multiplicador de cost complet"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Full Cost Period"
+msgstr "Període de cost complet"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Analysis Date"
+msgstr "Data d'anàlisi"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Window Start"
+msgstr "Inici de la finestra"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Full Cost Weight Basis"
+msgstr "Base de pes de cost complet"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Full cost total"
+msgstr "Total de cost complet"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Full Cost Window (Days)"
+msgstr "Finestra de cost complet (dies)"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Expenses"
+msgstr "Despeses"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Revenue"
+msgstr "Ingressos"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Monthly window"
+msgstr "Finestra mensual"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Inside Full-Cost Window"
+msgstr "Dins la finestra de full-cost"
+
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Productive"
+msgstr "Productiu"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Recompute"
+msgstr "Recalcula"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Recompute analytic full cost"
+msgstr "Recalcula el cost complet analític"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Recompute analytic full cost multipliers and amounts"
+msgstr "Recalcula els multiplicadors i imports de cost complet analític"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Recompute analytic lines"
+msgstr "Recalcula les línies analítiques"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Reproductive"
+msgstr "Reproductiu"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Not Analyzed"
+msgstr "No analitzat"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Full Cost Role"
+msgstr "Rol de cost complet"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Rolling window (last N days)"
+msgstr "Finestra mòbil (últims N dies)"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Analytic dynamic full cost - daily lines"
+msgstr "Cost complet dinàmic analític - línies diàries"
+
+#. module: account_analytic_dynamic_full_cost
+msgid ""
+"Productive plans correspond to value-generating activity.\n"
+"Reproductive plans correspond to indirect costs to be spread over productive "
+"activity.\n"
+"Not analyzed plans and their descendants are excluded from full-cost "
+"calculations."
+msgstr ""
+"Els plans productius corresponen a activitat que genera valor.\n"
+"Els plans reproductius corresponen a costos indirectes que s'han de repartir "
+"sobre l'activitat productiva.\n"
+"Els plans no analitzats i tots els seus descendents queden exclosos dels "
+"càlculs de cost complet."
+
+#. module: account_analytic_dynamic_full_cost
+msgid ""
+"A productive analytic plan cannot be placed under a reproductive analytic "
+"plan.\n"
+"\n"
+"Plan: %(plan)s\n"
+"Parent: %(parent)s"
+msgstr ""
+"Un pla analític productiu no es pot situar sota un pla analític "
+"reproductiu.\n"
+"\n"
+"Pla: %(plan)s\n"
+"Pare: %(parent)s"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Amount after applying the analytic plan full cost multiplier."
+msgstr "Import després d'aplicar el multiplicador de cost complet del pla analític."
+
+#. module: account_analytic_dynamic_full_cost
+msgid ""
+"Defines the period used to compute the full cost multiplier for each analytic "
+"plan.\n"
+"\n"
+"- Annual window: uses imputations from the same day of the previous year up "
+"to the reference date.\n"
+"- Two-year window: uses imputations from the same day two years before the "
+"reference date.\n"
+"- Three-year window: uses imputations from the same day three years before "
+"the reference date.\n"
+"- Monthly window: uses imputations from the same day of the previous month up "
+"to the reference date.\n"
+"- Rolling window (last N days): uses only imputations in the last N days, "
+"where N is defined in the 'Full Cost Window (Days)' field."
+msgstr ""
+"Defineix el període usat per calcular el multiplicador de cost complet de "
+"cada pla analític.\n"
+"\n"
+"- Finestra anual: usa les imputacions des del mateix dia de l'any anterior "
+"fins a la data de referència.\n"
+"- Finestra bianual: usa les imputacions des del mateix dia de dos anys abans "
+"fins a la data de referència.\n"
+"- Finestra trianual: usa les imputacions des del mateix dia de tres anys "
+"abans fins a la data de referència.\n"
+"- Finestra mensual: usa les imputacions des del mateix dia del mes anterior "
+"fins a la data de referència.\n"
+"- Finestra mòbil (últims N dies): usa només les imputacions dels últims N "
+"dies, on N es defineix al camp 'Finestra de cost complet (dies)'."
+
+#. module: account_analytic_dynamic_full_cost
+msgid ""
+"Defines which analytic line amounts are used as plan weights when computing "
+"full cost multipliers.\n"
+"\n"
+"- Expenses: negative analytic amounts are used as positive expense weight.\n"
+"- Revenue: positive analytic amounts are used as revenue weight."
+msgstr ""
+"Defineix quins imports de línia analítica s'usen com a pesos dels plans en "
+"calcular els multiplicadors de cost complet.\n"
+"\n"
+"- Despeses: els imports analítics negatius s'usen com a pes positiu de "
+"despesa.\n"
+"- Ingressos: els imports analítics positius s'usen com a pes d'ingressos."
+
+#. module: account_analytic_dynamic_full_cost
+msgid ""
+"Number of days to look back when computing the full cost multiplier, only used "
+"when the method is set to 'Rolling window'.\n"
+"\n"
+"For example, with 90 days the system will calculate the multiplier based on "
+"imputations in the last 90 days before the reference date."
+msgstr ""
+"Nombre de dies enrere que es tenen en compte en calcular el multiplicador de "
+"cost complet, només usat quan el mètode és 'Finestra mòbil'.\n"
+"\n"
+"Per exemple, amb 90 dies el sistema calcularà el multiplicador segons les "
+"imputacions dels últims 90 dies abans de la data de referència."
+
+#. module: account_analytic_dynamic_full_cost
+msgid ""
+"End date of the time window used to compute full cost multipliers. The actual "
+"window (annual, monthly or rolling) is defined on the company settings."
+msgstr ""
+"Data final de la finestra temporal usada per calcular els multiplicadors de "
+"cost complet. La finestra real (anual, mensual o mòbil) es defineix a la "
+"configuració de la companyia."
+
+#. module: account_analytic_dynamic_full_cost
+msgid ""
+"If enabled, all analytic lines of the selected company will be recomputed so "
+"that the 'Full Cost Amount' field is updated according to the new full cost "
+"multipliers."
+msgstr ""
+"Si està activat, es recalcularan totes les línies analítiques de la "
+"companyia seleccionada perquè el camp 'Import de cost complet' s'actualitzi "
+"segons els nous multiplicadors de cost complet."
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Software Delivery Portfolio"
+msgstr "Cartera de lliurament de programari"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Client Projects"
+msgstr "Projectes de client"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Product Implementation"
+msgstr "Implantació de producte"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Standard Implementation"
+msgstr "Implantació estàndard"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Implementation Package A"
+msgstr "Paquet d'implantació A"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Implementation Package B"
+msgstr "Paquet d'implantació B"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Custom Development"
+msgstr "Desenvolupament a mida"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Delivery Management Overhead"
+msgstr "Sobrecost de gestió del lliurament"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Maintenance & Support"
+msgstr "Manteniment i suport"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Corrective Maintenance"
+msgstr "Manteniment correctiu"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Evolutionary Maintenance"
+msgstr "Manteniment evolutiu"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Client Projects Overhead"
+msgstr "Sobrecost de projectes de client"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Internal Products"
+msgstr "Productes interns"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Company Overhead (General & Admin)"
+msgstr "Sobrecost de companyia (general i administració)"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "ACCT - Package A - Project Gamma"
+msgstr "COMPTE - Paquet A - Projecte Gamma"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "ACCT - Package B - Project Alpha"
+msgstr "COMPTE - Paquet B - Projecte Alpha"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "ACCT - Custom Development - Project Delta"
+msgstr "COMPTE - Desenvolupament a mida - Projecte Delta"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "ACCT - Internal Product - Platform"
+msgstr "COMPTE - Producte intern - Plataforma"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "ACCT - Support - Client Beta"
+msgstr "COMPTE - Suport - Client Beta"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "ACCT - Evolutionary Support - Customer Gamma"
+msgstr "COMPTE - Suport evolutiu - Client Gamma"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "ACCT - Client Projects - Direct Portfolio Work"
+msgstr "COMPTE - Projectes de client - Feina directa de cartera"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "ACCT - Software Delivery - Direct Portfolio Work"
+msgstr "COMPTE - Lliurament de programari - Feina directa de cartera"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "ACCT - G&A Overhead"
+msgstr "COMPTE - Sobrecost G&A"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "ACCT - Client Projects Overhead"
+msgstr "COMPTE - Sobrecost de projectes de client"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "ACCT - Delivery Mgmt Overhead"
+msgstr "COMPTE - Sobrecost de gestió del lliurament"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Package A - shared tooling expense"
+msgstr "Paquet A - despesa d'eines compartides"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Package B - specialized license"
+msgstr "Paquet B - llicència especialitzada"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Custom Development - external vendor"
+msgstr "Desenvolupament a mida - proveïdor extern"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Support - monitoring tooling"
+msgstr "Suport - eines de monitoratge"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Internal Product - infrastructure expense"
+msgstr "Producte intern - despesa d'infraestructura"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Client Projects - direct portfolio expense"
+msgstr "Projectes de client - despesa directa de cartera"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Software Delivery - direct portfolio expense"
+msgstr "Lliurament de programari - despesa directa de cartera"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "G&A - administration expense"
+msgstr "G&A - despesa d'administració"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Client Projects - coordination expense"
+msgstr "Projectes de client - despesa de coordinació"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Delivery Management - architecture review expense"
+msgstr "Gestió del lliurament - despesa de revisió d'arquitectura"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Full Cost Demo Portfolio"
+msgstr "Cartera demo de cost complet"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Odoo Line"
+msgstr "Línia Odoo"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Odoo Projects"
+msgstr "Projectes Odoo"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Odoo Implementations"
+msgstr "Implantacions Odoo"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Odoo Developments"
+msgstr "Desenvolupaments Odoo"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Odoo R&D"
+msgstr "I+D Odoo"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "BI Line"
+msgstr "Línia BI"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "BI Projects"
+msgstr "Projectes BI"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "BI Sales"
+msgstr "Comercial BI"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Structure"
+msgstr "Estructura"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Utilities"
+msgstr "Subministraments"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Administration"
+msgstr "Administració"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Management Tags"
+msgstr "Etiquetes de gestió"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Training Tag"
+msgstr "Etiqueta de formació"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Internal Governance Tag"
+msgstr "Etiqueta de governança interna"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "DEMO - Odoo Implementations"
+msgstr "DEMO - Implantacions Odoo"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "DEMO - Odoo Developments"
+msgstr "DEMO - Desenvolupaments Odoo"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "DEMO - BI Projects"
+msgstr "DEMO - Projectes BI"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "DEMO - Odoo R&D"
+msgstr "DEMO - I+D Odoo"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "DEMO - BI Sales"
+msgstr "DEMO - Comercial BI"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "DEMO - BI Projects - Additional Services"
+msgstr "DEMO - Projectes BI - serveis addicionals"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "DEMO - Administration"
+msgstr "DEMO - Administració"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "DEMO - Utilities"
+msgstr "DEMO - Subministraments"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "DEMO - Shared Structure"
+msgstr "DEMO - Estructura compartida"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "DEMO - Odoo Projects"
+msgstr "DEMO - Projectes Odoo"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "DEMO - Odoo Line"
+msgstr "DEMO - Línia Odoo"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "DEMO - Training Tag"
+msgstr "DEMO - Etiqueta de formació"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "DEMO - Internal Governance Tag"
+msgstr "DEMO - Etiqueta de governança interna"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Odoo Implementations - service revenue"
+msgstr "Implantacions Odoo - ingressos de servei"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Odoo Implementations - consulting delivery cost"
+msgstr "Implantacions Odoo - cost de consultoria i lliurament"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Odoo Implementations - tooling and travel cost"
+msgstr "Implantacions Odoo - cost d'eines i desplaçaments"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Odoo Developments - service revenue"
+msgstr "Desenvolupaments Odoo - ingressos de servei"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Odoo Developments - engineering cost"
+msgstr "Desenvolupaments Odoo - cost d'enginyeria"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Odoo Developments - external development cost"
+msgstr "Desenvolupaments Odoo - cost de desenvolupament extern"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Odoo R&D - product research cost"
+msgstr "I+D Odoo - cost de recerca de producte"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Odoo R&D - prototype cost"
+msgstr "I+D Odoo - cost de prototip"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "BI Projects - service revenue"
+msgstr "Projectes BI - ingressos de servei"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "BI Projects - delivery cost"
+msgstr "Projectes BI - cost de lliurament"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "BI Projects - licenses and infrastructure cost"
+msgstr "Projectes BI - cost de llicències i infraestructura"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "BI Sales - presales cost"
+msgstr "Comercial BI - cost de prevenda"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Utilities - cloud services cost"
+msgstr "Subministraments - cost de serveis cloud"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Utilities - office services cost"
+msgstr "Subministraments - cost de serveis d'oficina"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Administration - people operations cost"
+msgstr "Administració - cost d'operacions de persones"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Administration - finance and legal cost"
+msgstr "Administració - cost financer i legal"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Historical Odoo Implementations - service revenue"
+msgstr "Històric implantacions Odoo - ingressos de servei"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Historical Odoo Implementations - delivery cost"
+msgstr "Històric implantacions Odoo - cost de lliurament"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Historical Odoo Developments - service revenue"
+msgstr "Històric desenvolupaments Odoo - ingressos de servei"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Historical Odoo Developments - delivery cost"
+msgstr "Històric desenvolupaments Odoo - cost de lliurament"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Historical Odoo R&D - product research cost"
+msgstr "Històric I+D Odoo - cost de recerca de producte"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Historical BI Projects - service revenue"
+msgstr "Històric projectes BI - ingressos de servei"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Historical BI Projects - delivery cost"
+msgstr "Històric projectes BI - cost de lliurament"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Historical BI Sales - presales cost"
+msgstr "Històric comercial BI - cost de prevenda"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Historical Utilities - shared services cost"
+msgstr "Històric subministraments - cost de serveis compartits"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Historical Administration - operations cost"
+msgstr "Històric administració - cost d'operacions"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Older Odoo Implementations - service revenue"
+msgstr "Antic implantacions Odoo - ingressos de servei"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Older Odoo Implementations - delivery cost"
+msgstr "Antic implantacions Odoo - cost de lliurament"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Older BI Projects - service revenue"
+msgstr "Antic projectes BI - ingressos de servei"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Older BI Projects - delivery cost"
+msgstr "Antic projectes BI - cost de lliurament"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Older Structure - shared overhead cost"
+msgstr "Antic estructura - cost indirecte compartit"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Historical Full-Cost Analysis"
+msgstr "Anàlisi històrica de full-cost"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Analyze"
+msgstr "Analitza"
+
+#. module: account_analytic_dynamic_full_cost
+msgid "Open historical full-cost analysis"
+msgstr "Obre l'anàlisi històrica de full-cost"
