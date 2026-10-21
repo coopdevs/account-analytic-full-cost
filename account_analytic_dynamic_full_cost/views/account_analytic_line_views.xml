@@ -1,53 +1,69 @@
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <record id="view_account_analytic_line_tree_full_cost" model="ir.ui.view">
         <field name="name">account.analytic.line.tree.full.cost</field>
         <field name="model">account.analytic.line</field>
-        <field name="inherit_id" ref="analytic.view_account_analytic_line_tree"/>
+        <field name="inherit_id" ref="analytic.view_account_analytic_line_tree" />
         <field name="arch" type="xml">
-
-            <xpath expr="//field[@name='amount']" position="after">
-                <field name="full_cost_amount"
-                       sum="Full cost total"
-                       optional="show"/>
-                <field name="full_cost_multiplier_snapshot" optional="hide"/>
-            </xpath>
-
+            <field name="amount" position="after">
+                <field
+                    name="full_cost_amount"
+                    sum="Full cost total"
+                    optional="show"
+                />
+                <field
+                    name="full_cost_multiplier_snapshot"
+                    digits="[16, 4]"
+                    optional="hide"
+                />
+                <field name="full_cost_role" optional="hide" />
+            </field>
         </field>
     </record>
 
+    <record id="view_account_analytic_line_form_full_cost" model="ir.ui.view">
+        <field name="name">account.analytic.line.form.full.cost</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="analytic.view_account_analytic_line_form" />
+        <field name="arch" type="xml">
+            <field name="amount" position="after">
+                <field name="full_cost_amount" />
+                <field name="full_cost_role" />
+            </field>
+        </field>
+    </record>
+
+    <!-- Added on the base search view, so it is also available on every
+         primary view inheriting from it (e.g. Analytic Reporting). -->
     <record id="view_account_analytic_line_filter_full_cost" model="ir.ui.view">
         <field name="name">account.analytic.line.search.full.cost</field>
         <field name="model">account.analytic.line</field>
-        <field name="inherit_id" ref="account.view_account_analytic_line_filter_inherit_account"/>
+        <field name="inherit_id" ref="analytic.view_account_analytic_line_filter" />
         <field name="arch" type="xml">
             <xpath expr="//search" position="inside">
-                <filter name="full_cost_window"
-                        string="Inside Full-Cost Window"
-                        domain="[('is_in_full_cost_window', '=', True)]"/>
+                <separator />
+                <filter
+                    name="full_cost_window"
+                    string="Inside Full-Cost Window"
+                    domain="[('is_in_full_cost_window', '=', True)]"
+                />
+                <filter
+                    name="group_by_full_cost_role"
+                    string="Full Cost Role"
+                    context="{'group_by': 'full_cost_role'}"
+                />
             </xpath>
         </field>
-    </record>
-
-    <record id="analytic.account_analytic_line_action_entries" model="ir.actions.act_window">
-        <field name="context">{
-            'search_default_full_cost_window': 1,
-        }</field>
-    </record>
-
-    <record id="account.action_analytic_reporting" model="ir.actions.act_window">
-        <field name="context">{
-            'search_default_full_cost_window': 1,
-        }</field>
     </record>
 
     <record id="view_account_analytic_line_pivot_full_cost" model="ir.ui.view">
         <field name="name">account.analytic.line.pivot.full.cost</field>
         <field name="model">account.analytic.line</field>
-        <field name="inherit_id" ref="analytic.view_account_analytic_line_pivot"/>
+        <field name="inherit_id" ref="analytic.view_account_analytic_line_pivot" />
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='amount']" position="after">
-                <field name="full_cost_amount" type="measure"/>
-            </xpath>
+            <field name="amount" position="after">
+                <field name="full_cost_amount" type="measure" />
+            </field>
         </field>
     </record>
 </odoo>

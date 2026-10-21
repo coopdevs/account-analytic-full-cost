@@ -1,10 +1,10 @@
-# Copyright (C) 2025
+# Copyright 2026 Quim Rebull (Coopdevs)
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 {
     "name": "Analytic Dynamic Full Cost",
     "summary": "Compute and store dynamic full cost in analytic lines",
-    "version": "18.0.1.1.0",
+    "version": "18.0.1.0.0",
     "category": "Accounting/Analytic",
     "author": "Quim Rebull (Coopdevs), Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/account-analytic",
@@ -16,6 +16,7 @@
     ],
     "data": [
         "security/ir.model.access.csv",
+        "security/full_cost_security.xml",
         "views/analytic_plan_views.xml",
         "views/res_company.xml",
         "views/account_analytic_line_views.xml",
@@ -30,6 +31,7 @@
         "demo/analytic_account_demo.xml",
         "demo/analytic_line_demo.xml",
     ],
+    "post_init_hook": "post_init_hook",
     "installable": True,
     "application": False,
 }

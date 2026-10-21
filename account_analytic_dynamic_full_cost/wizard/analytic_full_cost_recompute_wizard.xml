@@ -1,25 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <record id="view_account_analytic_full_cost_recompute_wizard" model="ir.ui.view">
         <field name="name">account.analytic.full.cost.recompute.wizard.form</field>
         <field name="model">account.analytic.full.cost.recompute.wizard</field>
         <field name="arch" type="xml">
             <form string="Recompute analytic full cost">
-                <sheet>
-                    <group>
-                        <field name="company_id" groups="analytic.group_analytic_accounting"/>
-                        <field name="recompute_lines" groups="analytic.group_analytic_accounting"/>
-                    </group>
-                    <footer>
-                        <button name="action_recompute"
-                                string="Recompute"
-                                type="object"
-                                class="btn-primary"
-                                groups="analytic.group_analytic_accounting"/>
-                        <button string="Cancel"
-                                special="cancel"
-                                class="btn-secondary"/>
-                    </footer>
-                </sheet>
+                <group>
+                    <field name="company_id" groups="base.group_multi_company" />
+                    <field name="recompute_lines" />
+                </group>
+                <footer>
+                    <button
+                        name="action_recompute"
+                        string="Recompute"
+                        type="object"
+                        class="btn-primary"
+                    />
+                    <button string="Cancel" special="cancel" class="btn-secondary" />
+                </footer>
             </form>
         </field>
     </record>
@@ -29,13 +27,14 @@
         <field name="res_model">account.analytic.full.cost.recompute.wizard</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
-        <field name="view_id" ref="view_account_analytic_full_cost_recompute_wizard"/>
-        <field name="context">{}</field>
+        <field name="view_id" ref="view_account_analytic_full_cost_recompute_wizard" />
     </record>
 
-    <menuitem id="menu_account_analytic_full_cost_recompute_wizard"
-              name="Recompute analytic full cost"
-              parent="account.menu_analytic_accounting"
-              action="action_account_analytic_full_cost_recompute_wizard"
-              groups="analytic.group_analytic_accounting"/>
+    <menuitem
+        id="menu_account_analytic_full_cost_recompute_wizard"
+        name="Recompute analytic full cost"
+        parent="account.menu_analytic_accounting"
+        action="action_account_analytic_full_cost_recompute_wizard"
+        groups="account.group_account_manager"
+    />
 </odoo>

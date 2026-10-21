@@ -1,0 +1,2 @@
+- [Coopdevs](https://coopdevs.org):
+  - Quim Rebull \<quim.rebull@coopdevs.org\>

@@ -1,4 +1,4 @@
-# Copyright (C) 2026
+# Copyright 2026 Quim Rebull (Coopdevs)
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 from datetime import date
@@ -13,7 +13,17 @@ class TestAnalyticDynamicFullCost(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.company = cls.env.company
+        # Work on a dedicated company so that demo data (or any other data of
+        # the database) does not alter the plan weights.
+        cls.company = cls.env["res.company"].create({"name": "Full Cost Company"})
+        cls.env.user.company_ids |= cls.company
+        cls.env = cls.env(
+            context=dict(
+                cls.env.context,
+                allowed_company_ids=[cls.company.id],
+                tracking_disable=True,
+            )
+        )
         cls.Plan = cls.env["account.analytic.plan"]
         cls.Account = cls.env["account.analytic.account"]
         cls.Line = cls.env["account.analytic.line"]
@@ -82,22 +92,76 @@ class TestAnalyticDynamicFullCost(TransactionCase):
         self.assertEqual(line.full_cost_role, "not_analyzed")
         self.assertAlmostEqual(line.full_cost_amount, -42.0)
 
-    def test_line_without_company_keeps_original_amount(self):
-        plan = self._create_plan("No Company Plan")
-        account = self._create_account("No Company Account", plan)
-        line = self.Line.new(
-            {
-                "name": "No company",
-                "date": self.reference_date,
-                account.plan_id._column_name(): account.id,
-                "amount": -75.0,
-            }
+    def test_multipliers_are_computed_per_company(self):
+        other_company = self.env["res.company"].create({"name": "Other Company"})
+        root = self._create_plan("Multi Company Root")
+        productive = self._create_plan("Multi Company Productive", parent=root)
+        overhead = self._create_plan(
+            "Multi Company Overhead", full_cost_role="reproductive", parent=root
         )
-        plan.full_cost_multiplier = 2.5
+        productive_account = self._create_account(
+            "Multi Company Productive", productive
+        )
+        overhead_account = self._create_account("Multi Company Overhead", overhead)
+        line = self._create_line("Company productive", productive_account, -100.0)
+        self._create_line("Company overhead", overhead_account, -100.0)
 
+        self.Plan.recompute_full_cost_multipliers(
+            company=self.company,
+            date_to=self.reference_date,
+        )
+        self.Plan.recompute_full_cost_multipliers(
+            company=other_company,
+            date_to=self.reference_date,
+        )
         line.recompute_full_cost_amount()
 
-        self.assertAlmostEqual(line.full_cost_amount, -75.0)
+        self.assertAlmostEqual(productive.full_cost_multiplier, 2.0)
+        self.assertAlmostEqual(
+            productive.with_company(other_company).full_cost_multiplier, 1.0
+        )
+        self.assertAlmostEqual(line.full_cost_amount, -200.0)
+
+    def test_new_line_uses_current_multiplier(self):
+        root = self._create_plan("Create Root")
+        productive = self._create_plan("Create Productive", parent=root)
+        overhead = self._create_plan(
+            "Create Overhead", full_cost_role="reproductive", parent=root
+        )
+        productive_account = self._create_account("Create Productive", productive)
+        overhead_account = self._create_account("Create Overhead", overhead)
+        self._create_line("Create productive", productive_account, -100.0)
+        self._create_line("Create overhead", overhead_account, -50.0)
+        self.Plan.recompute_full_cost_multipliers(
+            company=self.company,
+            date_to=self.reference_date,
+        )
+
+        new_line = self._create_line("New productive", productive_account, -10.0)
+        self.assertAlmostEqual(new_line.full_cost_amount, -15.0)
+        self.assertAlmostEqual(new_line.full_cost_multiplier_snapshot, 1.5)
+
+        new_line.amount = -20.0
+        self.assertAlmostEqual(new_line.full_cost_amount, -30.0)
+
+        new_line.write({root._column_name(): overhead_account.id})
+        self.assertEqual(new_line.full_cost_role, "reproductive")
+        self.assertAlmostEqual(new_line.full_cost_amount, 0.0)
+
+    def test_plan_role_change_updates_line_role(self):
+        root = self._create_plan("Role Change Root")
+        child = self._create_plan("Role Change Child", parent=root)
+        line = self._create_line(
+            "Role change line", self._create_account("Role Change", child), -10.0
+        )
+        self.assertEqual(line.full_cost_role, "productive")
+
+        root.full_cost_role = "not_analyzed"
+        self.assertEqual(line.full_cost_role, "not_analyzed")
+
+        root.full_cost_role = "productive"
+        child.full_cost_role = "reproductive"
+        self.assertEqual(line.full_cost_role, "reproductive")
 
     def test_zero_productive_weight_uses_neutral_multiplier(self):
         root = self._create_plan("Zero Weight Root")
@@ -251,12 +315,9 @@ class TestAnalyticDynamicFullCost(TransactionCase):
             line_date=date(2025, 5, 15),
         )
 
-        report = self.Report.search(
-            [
-                ("company_id", "=", self.company.id),
-                ("analysis_date", "=", self.reference_date),
-            ]
-        )
+        report = self.Report.with_context(
+            full_cost_analysis_date=self.reference_date
+        ).search([("company_id", "=", self.company.id)])
         report_line = report.filtered(lambda item: item.line_id == may_productive)
 
         self.assertNotIn(april_productive.id, report.mapped("line_id").ids)
@@ -288,19 +349,13 @@ class TestAnalyticDynamicFullCost(TransactionCase):
         action = wizard.action_open_report()
 
         self.assertEqual(action["res_model"], "account.analytic.full.cost.report")
-        self.assertEqual(
-            action["domain"],
-            [
-                ("company_id", "=", self.company.id),
-                ("analysis_date", "=", self.reference_date),
-            ],
+        self.assertEqual(action["domain"], [("company_id", "=", self.company.id)])
+        report_line = (
+            self.Report.with_context(**action["context"])
+            .search(action["domain"])
+            .filtered(lambda item: item.line_id == productive_line)
         )
-        report_line = self.Report.search(
-            [
-                ("analysis_date", "=", self.reference_date),
-                ("line_id", "=", productive_line.id),
-            ]
-        )
+        self.assertEqual(report_line.analysis_date, self.reference_date)
         self.assertAlmostEqual(report_line.full_cost_amount, -150.0)
 
     def test_historical_report_uses_company_period_configuration(self):
@@ -334,12 +389,9 @@ class TestAnalyticDynamicFullCost(TransactionCase):
             -100.0,
             line_date=self.reference_date,
         )
-        report_line = self.Report.search(
-            [
-                ("analysis_date", "=", self.reference_date),
-                ("line_id", "=", may_line.id),
-            ]
-        )
+        report_line = self.Report.with_context(
+            full_cost_analysis_date=self.reference_date
+        ).search([("line_id", "=", may_line.id)])
 
         self.assertAlmostEqual(report_line.full_cost_amount, -150.0)
 
@@ -558,15 +610,20 @@ class TestAnalyticDynamicFullCost(TransactionCase):
         )
         outside_line = self._create_line(
             "Outside full cost window",
-            inside_line.account_id,
+            inside_line._get_analytic_accounts(),
             -10.0,
             line_date=date(2000, 1, 1),
         )
 
         window_lines = self.Line.search([("is_in_full_cost_window", "=", True)])
+        outside_lines = self.Line.search([("is_in_full_cost_window", "=", False)])
 
         self.assertIn(inside_line, window_lines)
         self.assertNotIn(outside_line, window_lines)
+        self.assertIn(outside_line, outside_lines)
+        self.assertNotIn(inside_line, outside_lines)
+        self.assertTrue(inside_line.is_in_full_cost_window)
+        self.assertFalse(outside_line.is_in_full_cost_window)
 
     def test_wizard_recomputes_multipliers_and_lines(self):
         today = fields.Date.context_today(self.Plan)
@@ -637,4 +694,76 @@ class TestAnalyticDynamicFullCost(TransactionCase):
         wizard.action_recompute()
 
         self.assertAlmostEqual(root.full_cost_multiplier, 2.0)
-        self.assertAlmostEqual(productive_line.full_cost_amount, 0.0)
+        # The line keeps the amount computed at creation time
+        self.assertAlmostEqual(productive_line.full_cost_amount, -100.0)
+
+    def test_parent_cannot_become_reproductive_with_productive_children(self):
+        root = self._create_plan("Constraint Root")
+        self._create_plan("Constraint Productive Child", parent=root)
+
+        with self.assertRaises(ValidationError):
+            root.full_cost_role = "reproductive"
+
+    def test_historical_report_matches_stored_full_cost(self):
+        root = self._create_plan("Deep Root")
+        line_a = self._create_plan("Deep Line A", parent=root)
+        line_a_projects = self._create_plan("Deep A Projects", parent=line_a)
+        line_a_overhead = self._create_plan(
+            "Deep A Overhead", full_cost_role="reproductive", parent=line_a
+        )
+        structure = self._create_plan(
+            "Deep Structure", full_cost_role="reproductive", parent=root
+        )
+        tags = self._create_plan("Deep Tags", full_cost_role="not_analyzed")
+        tag = self._create_plan("Deep Tag", parent=tags)
+
+        accounts = {
+            plan: self._create_account(plan.name, plan)
+            for plan in (line_a, line_a_projects, line_a_overhead, structure, tag)
+        }
+        lines = (
+            self._create_line("A direct", accounts[line_a], -50.0)
+            + self._create_multidimensional_line(
+                "A project with tag",
+                accounts[line_a_projects] + accounts[tag],
+                -100.0,
+            )
+            + self._create_line("A overhead", accounts[line_a_overhead], -50.0)
+            + self._create_line("Structure", accounts[structure], -75.0)
+            + self._create_line("Tag only", accounts[tag], -30.0)
+            + self._create_line("Revenue", accounts[line_a_projects], 500.0)
+        )
+
+        self.Plan.recompute_full_cost_multipliers(
+            company=self.company,
+            date_to=self.reference_date,
+        )
+        lines.recompute_full_cost_amount()
+        report = self.Report.with_context(
+            full_cost_analysis_date=self.reference_date
+        ).search([("line_id", "in", lines.ids)])
+
+        # root: (200 + 75) / 200, line A: (150 + 50) / 150
+        self.assertAlmostEqual(root.full_cost_multiplier, 1.375)
+        self.assertAlmostEqual(line_a.full_cost_multiplier, 1.375 * 4 / 3)
+        self.assertAlmostEqual(line_a_projects.full_cost_multiplier, 1.375 * 4 / 3)
+        self.assertEqual(len(report), len(lines))
+        for report_line in report:
+            line = report_line.line_id
+            self.assertEqual(report_line.full_cost_role, line.full_cost_role)
+            self.assertAlmostEqual(
+                report_line.full_cost_amount, line.full_cost_amount
+            )
+            self.assertAlmostEqual(
+                report_line.full_cost_multiplier,
+                line.full_cost_multiplier_snapshot,
+                places=5,
+            )
+        # Every cost of the analysed dimension ends up in productive lines
+        analysed = lines.filtered(lambda line: line.full_cost_role != "not_analyzed")
+        self.assertAlmostEqual(
+            sum(analysed.filtered(lambda line: line.amount < 0).mapped(
+                "full_cost_amount"
+            )),
+            -275.0,
+        )

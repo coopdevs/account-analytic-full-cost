@@ -3,10 +3,15 @@
     <record id="account_analytic_plan_form_view_full_cost" model="ir.ui.view">
         <field name="name">account.analytic.plan.form.full.cost</field>
         <field name="model">account.analytic.plan</field>
-        <field name="inherit_id" ref="analytic.account_analytic_plan_form_view"/>
+        <field name="inherit_id" ref="analytic.account_analytic_plan_form_view" />
         <field name="arch" type="xml">
             <field name="color" position="after">
-                <field name="full_cost_role"/>
+                <field name="full_cost_role" />
+                <field
+                    name="full_cost_multiplier"
+                    digits="[16, 4]"
+                    invisible="full_cost_role != 'productive'"
+                />
             </field>
         </field>
     </record>
@@ -14,11 +19,15 @@
     <record id="account_analytic_plan_tree_view_full_cost" model="ir.ui.view">
         <field name="name">account.analytic.plan.tree.full.cost</field>
         <field name="model">account.analytic.plan</field>
-        <field name="inherit_id" ref="analytic.account_analytic_plan_tree_view"/>
+        <field name="inherit_id" ref="analytic.account_analytic_plan_tree_view" />
         <field name="arch" type="xml">
             <field name="color" position="after">
-                <field name="full_cost_role" optional="show"/>
-                <field name="full_cost_multiplier" optional="show"/>
+                <field name="full_cost_role" optional="show" />
+                <field
+                    name="full_cost_multiplier"
+                    digits="[16, 4]"
+                    optional="show"
+                />
             </field>
         </field>
     </record>
