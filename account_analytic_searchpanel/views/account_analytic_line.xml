@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_account_analytic_line_filter_searchpanel" model="ir.ui.view">
+        <field name="name">account.analytic.line.search.searchpanel</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="account.view_account_analytic_line_filter_inherit_account"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='groupby']/filter[@name='account_id']" position="attributes">
+                <attribute name="string">Analytic Account</attribute>
+                <attribute name="name">group_by_analytic_account</attribute>
+            </xpath>
+            <xpath expr="//group[@name='groupby']/filter[@name='group_by_analytic_account']" position="before">
+                <filter name="group_by_analytic_plan"
+                        string="Analytic Plan"
+                        context="{'group_by': 'analytic_plan_id'}"/>
+                <filter name="group_by_analytic_plan_level_0"
+                        string="Analytic Plan (Root)"
+                        context="{'group_by': 'analytic_plan_level_0_id'}"/>
+                <filter name="group_by_analytic_plan_level_1"
+                        string="Analytic Plan (Level 1)"
+                        context="{'group_by': 'analytic_plan_level_1_id'}"/>
+                <filter name="group_by_analytic_plan_level_2"
+                        string="Analytic Plan (Level 2)"
+                        context="{'group_by': 'analytic_plan_level_2_id'}"/>
+                <filter name="group_by_analytic_plan_level_3"
+                        string="Analytic Plan (Level 3)"
+                        context="{'group_by': 'analytic_plan_level_3_id'}"/>
+                <filter name="group_by_analytic_plan_level_4"
+                        string="Analytic Plan (Level 4)"
+                        context="{'group_by': 'analytic_plan_level_4_id'}"/>
+            </xpath>
+            <xpath expr="//search" position="inside">
+                <searchpanel>
+                    <field name="analytic_plan_id"
+                           string="Analytic Plan"
+                           icon="fa-filter"
+                           limit="0"/>
+                </searchpanel>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_analytic_line_tree_searchpanel" model="ir.ui.view">
+        <field name="name">account.analytic.line.list.searchpanel</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="analytic.view_account_analytic_line_tree"/>
+        <field name="arch" type="xml">
+            <list position="attributes">
+                <attribute name="js_class">analytic_plan_level_list</attribute>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_account_analytic_line_pivot_searchpanel" model="ir.ui.view">
+        <field name="name">account.analytic.line.pivot.searchpanel</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="analytic.view_account_analytic_line_pivot"/>
+        <field name="arch" type="xml">
+            <pivot position="attributes">
+                <attribute name="js_class">analytic_plan_level_pivot</attribute>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="analytic.account_analytic_line_action_entries" model="ir.actions.act_window">
+        <field name="context">{
+            'search_default_group_by_analytic_plan': 1,
+            'search_default_group_by_analytic_account': 2,
+            'search_default_fiscal_date': 1,
+        }</field>
+    </record>
+
+    <record id="account.action_analytic_reporting" model="ir.actions.act_window">
+        <field name="context">{
+            'search_default_group_by_analytic_plan': 1,
+            'search_default_group_by_analytic_account': 2,
+            'search_default_fiscal_date': 1,
+        }</field>
+    </record>
+</odoo>

@@ -1,0 +1,19 @@
+// Shade the plan level rows by depth so that the plan hierarchy reads at a glance. An
+// inset shadow is used because the header cells force their background.
+$o-analytic-plan-level-color: rgb(1, 126, 132);
+$o-analytic-plan-level-alphas: (
+    1: 0.3,
+    2: 0.17,
+    3: 0.08,
+    4: 0.04,
+);
+
+@each $level, $alpha in $o-analytic-plan-level-alphas {
+    .o_pivot tr.o_analytic_plan_level_#{$level} > * {
+        box-shadow: inset 0 0 0 100vmax rgba($o-analytic-plan-level-color, $alpha);
+    }
+}
+
+.o_pivot tr.o_analytic_plan_level_1 > th {
+    font-weight: bold;
+}

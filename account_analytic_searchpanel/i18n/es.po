@@ -1,0 +1,111 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_analytic_searchpanel
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-28 10:38+0000\n"
+"PO-Revision-Date: 2026-10-27 20:53+0000\n"
+"Last-Translator: \n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#. module: account_analytic_searchpanel
+#: model_terms:ir.ui.view,arch_db:account_analytic_searchpanel.view_account_analytic_line_filter_searchpanel
+msgid "Analytic Account"
+msgstr "Cuenta analítica"
+
+#. module: account_analytic_searchpanel
+#: model:ir.model,name:account_analytic_searchpanel.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Línea analítica"
+
+#. module: account_analytic_searchpanel
+#: model:ir.model.fields,field_description:account_analytic_searchpanel.field_account_analytic_line__analytic_plan_id
+#: model_terms:ir.ui.view,arch_db:account_analytic_searchpanel.view_account_analytic_line_filter_searchpanel
+msgid "Analytic Plan"
+msgstr "Plan analítico"
+
+#. module: account_analytic_searchpanel
+#: model:ir.model.fields,field_description:account_analytic_searchpanel.field_account_analytic_line__analytic_plan_level_1_id
+#: model_terms:ir.ui.view,arch_db:account_analytic_searchpanel.view_account_analytic_line_filter_searchpanel
+msgid "Analytic Plan (Level 1)"
+msgstr "Plan analítico (nivel 1)"
+
+#. module: account_analytic_searchpanel
+#: model:ir.model.fields,field_description:account_analytic_searchpanel.field_account_analytic_line__analytic_plan_level_2_id
+#: model_terms:ir.ui.view,arch_db:account_analytic_searchpanel.view_account_analytic_line_filter_searchpanel
+msgid "Analytic Plan (Level 2)"
+msgstr "Plan analítico (nivel 2)"
+
+#. module: account_analytic_searchpanel
+#: model:ir.model.fields,field_description:account_analytic_searchpanel.field_account_analytic_line__analytic_plan_level_3_id
+#: model_terms:ir.ui.view,arch_db:account_analytic_searchpanel.view_account_analytic_line_filter_searchpanel
+msgid "Analytic Plan (Level 3)"
+msgstr "Plan analítico (nivel 3)"
+
+#. module: account_analytic_searchpanel
+#: model:ir.model.fields,field_description:account_analytic_searchpanel.field_account_analytic_line__analytic_plan_level_4_id
+#: model_terms:ir.ui.view,arch_db:account_analytic_searchpanel.view_account_analytic_line_filter_searchpanel
+msgid "Analytic Plan (Level 4)"
+msgstr "Plan analítico (nivel 4)"
+
+#. module: account_analytic_searchpanel
+#: model:ir.model.fields,field_description:account_analytic_searchpanel.field_account_analytic_line__analytic_plan_level_0_id
+#: model_terms:ir.ui.view,arch_db:account_analytic_searchpanel.view_account_analytic_line_filter_searchpanel
+msgid "Analytic Plan (Root)"
+msgstr "Plan analítico (raíz)"
+
+#. module: account_analytic_searchpanel
+#: model:ir.model,name:account_analytic_searchpanel.model_account_analytic_plan
+msgid "Analytic Plans"
+msgstr "Planes analíticos"
+
+#. module: account_analytic_searchpanel
+#: model:ir.model.fields,help:account_analytic_searchpanel.field_account_analytic_plan__show_in_analytic_searchpanel
+msgid ""
+"If enabled, analytic lines using this plan can be explored from the Analytic"
+" Items search panel."
+msgstr ""
+"Si se activa, las líneas analíticas que usan este plan se pueden explorar "
+"desde el panel de búsqueda de los apuntes analíticos."
+
+#. module: account_analytic_searchpanel
+#: model:ir.model.fields,field_description:account_analytic_searchpanel.field_account_analytic_plan__show_in_analytic_searchpanel
+msgid "Show in Analytic Search Panel"
+msgstr "Mostrar en el panel de búsqueda analítico"
+
+#. module: account_analytic_searchpanel
+#. odoo-python
+#: code:addons/account_analytic_searchpanel/controllers/main.py:0
+msgid "All"
+msgstr "Todos"
+
+#. module: account_analytic_searchpanel
+#. odoo-python
+#: code:addons/account_analytic_searchpanel/controllers/main.py:0
+msgid "Analytic plans"
+msgstr "Planes analíticos"
+
+#. module: account_analytic_searchpanel
+#. odoo-python
+#: code:addons/account_analytic_searchpanel/controllers/main.py:0
+msgid "Exported"
+msgstr "Exportado"
+
+#. module: account_analytic_searchpanel
+#. odoo-python
+#: code:addons/account_analytic_searchpanel/controllers/main.py:0
+msgid "No data to export"
+msgstr "No hay datos para exportar"
+
+#. module: account_analytic_searchpanel
+#. odoo-python
+#: code:addons/account_analytic_searchpanel/controllers/main.py:0
+msgid "Period"
+msgstr "Periodo"

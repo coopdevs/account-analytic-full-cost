@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t
+        t-name="account_analytic_searchpanel.PivotRenderer"
+        t-inherit="web.PivotRenderer"
+        t-inherit-mode="primary"
+    >
+        <xpath expr="//tr[@t-foreach='table.rows']" position="attributes">
+            <attribute name="t-att-class">row.analyticPlanLevel and 'o_analytic_plan_level_' + row.analyticPlanLevel</attribute>
+        </xpath>
+    </t>
+</templates>
