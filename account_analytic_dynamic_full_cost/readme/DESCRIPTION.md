@@ -17,25 +17,35 @@ traceable analytic cost structure.
 
 ## How Full Cost Is Determined
 
+The cost of the reproductive plans is spread over the productive ones,
+proportionally to their **base lines**: their expenses or their revenue,
+depending on the company weight basis (see below). Billing ten times more, or
+spending ten times more, means bearing ten times more of the reproductive cost.
+
 For each company and reference date, the module:
 
 1. Selects the computation window according to the company settings.
-2. Computes a weight for each analytic plan in the hierarchy, using the analytic
-   account field that corresponds to that plan dimension.
-3. Computes an isolated multiplier for each productive plan from its productive
-   and reproductive child branches.
-4. Multiplies the isolated multiplier by its ancestor multipliers.
-5. Stores the resulting multiplier on the analytic plan.
+2. Computes, for each analytic plan, the amount of its base lines and the net
+   cost of all its lines (expenses minus revenue), using the analytic account
+   field that corresponds to that plan dimension.
+3. At each productive plan, computes a rate: the net cost of its reproductive
+   child branches divided by the base lines of its productive branch. When a
+   productive plan has no base lines below it, its reproductive cost goes up to
+   the parent level.
+4. Adds the rates of the plan and all its ancestors.
+5. Stores the resulting multiplier on the analytic plan: `1 + rate` when the
+   base lines are expenses (the cost grows), `1 - rate` when they are revenue
+   (the margin shrinks).
 
-For each analytic line, the module stores the amount after applying the
-full-cost multipliers of its analyzed productive dimensions:
+For each analytic line, the module stores its full-cost amount:
 
-```
-full_cost_amount = amount * product(plan_full_cost_multipliers)
-```
+- lines linked to reproductive plans: `0.0`, whatever their sign, because their
+  whole balance is redistributed over productive branches;
+- base lines of productive plans: `amount * product(plan_full_cost_multipliers)`;
+- any other line: its original amount.
 
-Analytic lines linked to reproductive plans are set to `0.0`, because their
-weight is redistributed over productive branches.
+The full-cost amounts of the analysed lines therefore add up to their original
+amounts: the reproductive cost is moved, never created nor lost.
 
 Plans marked as **Not Analyzed** and every descendant below them are completely
 excluded from the computation. Their analytic lines keep their original amount.
@@ -54,15 +64,20 @@ Examples:
 - Two-year window: full cost based on the same date two years earlier.
 - Three-year window: full cost based on the same date three years earlier.
 - Rolling window = 180 days: full cost based on the last six months.
+- Current fiscal year: full cost based on the fiscal year of the reference date,
+  from its first day. Every line of the year is valued with the same
+  multipliers, so the full cost of the year adds up to its amount.
 
 ## Weight Basis
 
-The company setting **Full Cost Weight Basis** defines which analytic line
-amounts are used as plan weights:
+The company setting **Full Cost Weight Basis** defines the base lines, which
+both weight the productive plans and carry the reproductive cost:
 
-- **Expenses**: analytic lines with negative amount are used as positive expense
-  magnitude.
-- **Revenue**: analytic lines with positive amount are used as revenue weight.
+- **Expenses**: analytic lines with negative amount. The reproductive cost is
+  added to the expenses of the productive plans.
+- **Revenue**: analytic lines with positive amount. The reproductive cost is
+  deducted from the revenue of the productive plans, as a percentage of their
+  billing.
 
 ## Recalculation
 

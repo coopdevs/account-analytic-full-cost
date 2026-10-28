@@ -14,6 +14,7 @@ class ResCompany(models.Model):
             ("triannual", "Three-year window"),
             ("monthly", "Monthly window"),
             ("rolling", "Rolling window (last N days)"),
+            ("fiscal_year", "Current fiscal year"),
         ],
         string="Full Cost Period",
         required=True,
@@ -30,7 +31,11 @@ class ResCompany(models.Model):
             "- Monthly window: uses imputations from the same day of the "
             "previous month up to the reference date.\n"
             "- Rolling window (last N days): uses only imputations in the last "
-            "N days, where N is defined in the 'Full Cost Window (Days)' field."
+            "N days, where N is defined in the 'Full Cost Window (Days)' field.\n"
+            "- Current fiscal year: uses imputations from the first day of the "
+            "fiscal year of the reference date up to the reference date, so "
+            "that the full cost of the lines of the year adds up to their "
+            "amount."
         ),
     )
 
@@ -43,11 +48,12 @@ class ResCompany(models.Model):
         required=True,
         default="expenses",
         help=(
-            "Defines which analytic line amounts are used as plan weights when "
-            "computing full cost multipliers.\n\n"
-            "- Expenses: negative analytic amounts are used as positive "
-            "expense weight.\n"
-            "- Revenue: positive analytic amounts are used as revenue weight."
+            "Defines the analytic lines that weight the productive plans and "
+            "carry the cost of the reproductive ones.\n\n"
+            "- Expenses: the reproductive cost is spread proportionally to the "
+            "expenses of the productive plans and added to them.\n"
+            "- Revenue: the reproductive cost is spread proportionally to the "
+            "revenue of the productive plans and deducted from it."
         ),
     )
 

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="res_config_settings_view_form_analytic_full_cost" model="ir.ui.view">
+        <field name="name">res.config.settings.form.analytic.full.cost</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <setting id="track_costs_revenues" position="after">
+                <setting
+                    id="analytic_full_cost"
+                    string="Analytic Full Cost"
+                    company_dependent="1"
+                    help="Spread the cost of the reproductive analytic plans over the productive ones"
+                    invisible="not group_analytic_accounting"
+                >
+                    <div class="content-group">
+                        <div class="row mt16">
+                            <label
+                                for="full_cost_period"
+                                class="col-lg-4 o_light_label"
+                            />
+                            <field name="full_cost_period" />
+                        </div>
+                        <div
+                            class="alert alert-warning mt8 mb-0"
+                            role="alert"
+                            invisible="full_cost_period != 'fiscal_year'"
+                        >
+                            <span
+                            >At the beginning of the fiscal year there are few imputations yet, so the multipliers can be unreliable and change a lot from one recomputation to the next.</span>
+                        </div>
+                        <div
+                            class="row"
+                            invisible="full_cost_period != 'rolling'"
+                        >
+                            <label
+                                for="full_cost_window_days"
+                                class="col-lg-4 o_light_label"
+                            />
+                            <field name="full_cost_window_days" />
+                        </div>
+                        <div class="row">
+                            <label
+                                for="full_cost_weight_basis"
+                                class="col-lg-4 o_light_label"
+                            />
+                            <field name="full_cost_weight_basis" />
+                        </div>
+                        <div class="mt8">
+                            <button
+                                name="%(action_account_analytic_full_cost_recompute_wizard)d"
+                                type="action"
+                                string="Recompute full cost"
+                                icon="oi-arrow-right"
+                                class="btn-link"
+                            />
+                        </div>
+                    </div>
+                </setting>
+            </setting>
+        </field>
+    </record>
+</odoo>

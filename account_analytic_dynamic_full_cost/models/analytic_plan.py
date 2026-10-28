@@ -1,7 +1,9 @@
 # Copyright 2026 Quim Rebull (Coopdevs)
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
+from collections import defaultdict
 from datetime import timedelta
+from functools import cache
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
@@ -34,8 +36,9 @@ class AccountAnalyticPlan(models.Model):
         company_dependent=True,
         readonly=True,
         copy=False,
-        help="Multiplier computed for the current company by the last "
-        "full-cost recomputation.",
+        help="Multiplier applied to the expenses (or the revenue, depending on "
+        "the weight basis of the company) of the plan, computed for the "
+        "current company by the last full-cost recomputation.",
     )
 
     @api.constrains("full_cost_role", "parent_id")
@@ -89,87 +92,110 @@ class AccountAnalyticPlan(models.Model):
             return True
         return bool(self.parent_id) and self.parent_id._is_excluded_from_full_cost()
 
-    def _get_direct_weights(self, company, date_from, date_to):
-        """Return {plan_id: weight} with the weight of the analytic lines
-        directly linked to accounts of each plan, in every analytic column."""
+    def _get_direct_amounts(self, company, date_from, date_to):
+        """Return ``(base_weights, net_costs)``, two {plan_id: amount} dicts
+        computed from the analytic lines directly linked to accounts of each
+        plan, in every analytic column:
+
+        - base weight: absolute amount of the lines that carry the full cost
+          load, the expenses or the revenue depending on the company;
+        - net cost: opposite of the balance of all the lines.
+        """
         line_model = self.env["account.analytic.line"]
-        if company.full_cost_weight_basis == "revenue":
-            amount_domain = [("amount", ">", 0)]
-            sign = 1.0
-        else:
-            amount_domain = [("amount", "<", 0)]
-            sign = -1.0
-        base_domain = [
+        domain = [
             ("company_id", "=", company.id),
             ("date", ">=", date_from),
             ("date", "<=", date_to),
-        ] + amount_domain
-        weights = {}
+        ]
+        base_domain = line_model._get_full_cost_base_domain(company)
+        base_weights = defaultdict(float)
+        net_costs = defaultdict(float)
         for fname in line_model._get_plan_fnames():
-            groups = line_model._read_group(
-                base_domain + [(fname, "!=", False)],
-                groupby=[fname],
-                aggregates=["amount:sum"],
-            )
-            for account, amount in groups:
-                plan_id = account.plan_id.id
-                weights[plan_id] = weights.get(plan_id, 0.0) + sign * amount
-        return weights
+            plan_domain = domain + [(fname, "!=", False)]
+            for account, amount in line_model._read_group(
+                plan_domain + base_domain, groupby=[fname], aggregates=["amount:sum"]
+            ):
+                base_weights[account.plan_id.id] += abs(amount)
+            for account, amount in line_model._read_group(
+                plan_domain, groupby=[fname], aggregates=["amount:sum"]
+            ):
+                net_costs[account.plan_id.id] -= amount
+        return base_weights, net_costs
 
     @api.model
     def _compute_full_cost_multipliers(self, company, date_to):
-        """Return {plan_id: multiplier} for every analytic plan."""
+        """Return {plan_id: multiplier} for every analytic plan.
+
+        At every level, the net cost of the reproductive child plans is spread
+        over the base lines (expenses or revenue) of the productive plans
+        below, proportionally to their amount. The rates of all the levels
+        above a plan add up, and the multiplier of its base lines is
+        ``1 + rate`` for expenses (the cost grows) and ``1 - rate`` for
+        revenue (the margin shrinks), so that the full cost of all the lines
+        adds up to their amount. The cost of a level without base lines below
+        goes up to the parent level."""
         date_from = self._get_full_cost_period_start(company, date_to)
         plans = self.search([])
-        direct_weights = plans._get_direct_weights(company, date_from, date_to)
+        base_weights, net_costs = plans._get_direct_amounts(
+            company, date_from, date_to
+        )
         excluded = plans.filtered(lambda plan: plan._is_excluded_from_full_cost())
-        subtree_weights = {}
+        productive = (
+            plans.filtered(lambda plan: plan.full_cost_role == "productive") - excluded
+        )
+        reproductive = (
+            plans.filtered(lambda plan: plan.full_cost_role == "reproductive")
+            - excluded
+        )
 
-        def subtree_weight(plan):
-            if plan.id not in subtree_weights:
-                subtree_weights[plan.id] = (
-                    0.0
-                    if plan in excluded
-                    else direct_weights.get(plan.id, 0.0)
-                    + sum(subtree_weight(child) for child in plan.children_ids)
-                )
-            return subtree_weights[plan.id]
+        @cache
+        def base_weight(plan):
+            return base_weights[plan.id] + sum(
+                base_weight(child) for child in plan.children_ids & productive
+            )
 
+        @cache
+        def reproductive_cost(plan):
+            return net_costs[plan.id] + sum(
+                reproductive_cost(child) for child in plan.children_ids & reproductive
+            )
+
+        @cache
+        def level_cost(plan):
+            """Reproductive cost to spread at the level of the plan."""
+            return sum(
+                reproductive_cost(child) for child in plan.children_ids & reproductive
+            ) + sum(
+                level_cost(child)
+                for child in plan.children_ids & productive
+                if not base_weight(child)
+            )
+
+        rates = {}
+
+        def set_rates(plan, rate):
+            if base_weight(plan):
+                rate += level_cost(plan) / base_weight(plan)
+            rates[plan.id] = rate
+            for child in plan.children_ids & productive:
+                set_rates(child, rate)
+
+        for root in productive.filtered(lambda plan: not plan.parent_id):
+            set_rates(root, 0.0)
+
+        sign = -1.0 if company.full_cost_weight_basis == "revenue" else 1.0
         multipliers = {}
-
-        def multiplier(plan):
-            if plan.id in multipliers:
-                return multipliers[plan.id]
-            if plan in excluded:
-                value = 1.0
-            elif plan.full_cost_role == "reproductive":
-                value = 0.0
-            else:
-                children = plan.children_ids - excluded
-                reproductive = sum(
-                    subtree_weight(child)
-                    for child in children
-                    if child.full_cost_role == "reproductive"
-                )
-                productive = direct_weights.get(plan.id, 0.0) + sum(
-                    subtree_weight(child)
-                    for child in children
-                    if child.full_cost_role == "productive"
-                )
-                value = (
-                    (productive + reproductive) / productive if productive else 1.0
-                )
-                if plan.parent_id:
-                    value *= multiplier(plan.parent_id)
-            multipliers[plan.id] = value
-            return value
-
         for plan in plans:
-            multiplier(plan)
+            if plan in reproductive:
+                multipliers[plan.id] = 0.0
+            elif plan in productive:
+                multipliers[plan.id] = 1.0 + sign * rates[plan.id]
+            else:
+                multipliers[plan.id] = 1.0
         return multipliers
 
     @api.model
-    def recompute_full_cost_multipliers(self, company=None, date_to=False):
+    def _recompute_full_cost_multipliers(self, company=None, date_to=False):
         company = company or self.env.company
         date_to = fields.Date.to_date(date_to or fields.Date.context_today(self))
         multipliers = self.sudo()._compute_full_cost_multipliers(company, date_to)
@@ -180,7 +206,7 @@ class AccountAnalyticPlan(models.Model):
     @api.model
     def _recompute_full_cost(self, company, recompute_lines=True, date_to=False):
         date_to = fields.Date.to_date(date_to or fields.Date.context_today(self))
-        self.recompute_full_cost_multipliers(company=company, date_to=date_to)
+        self._recompute_full_cost_multipliers(company=company, date_to=date_to)
         if recompute_lines:
             date_from = self._get_full_cost_period_start(company, date_to)
             self.env["account.analytic.line"].search(
@@ -199,6 +225,9 @@ class AccountAnalyticPlan(models.Model):
     @api.model
     def _get_full_cost_period_start(self, company, date_to):
         method = company.full_cost_period or "biannual"
+
+        if method == "fiscal_year":
+            return company.compute_fiscalyear_dates(date_to)["date_from"]
 
         year_windows = {
             "annual": 1,

@@ -18,11 +18,14 @@ plan has its own account field; dimensions marked as *Not Analyzed* are ignored.
 
 ## 2. Configure Company Full-Cost Settings
 
-Go to *Settings -> Companies -> [Your Company]* and set:
+Go to *Accounting -> Configuration -> Settings*, in the **Analytics** block
+(with the analytic accounting enabled), and set for the current company:
 
 - **Full Cost Period**
+- **Full Cost Window (Days)** (only for the rolling window)
 - **Full Cost Weight Basis**
-- **Full Cost Window (Days)**
+
+The block also links to the recompute wizard.
 
 The window determines which analytic lines are considered when recomputing plan
 weights. The weight basis determines whether those weights come from expenses

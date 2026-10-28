@@ -8,6 +8,8 @@ from odoo.osv import expression
 
 from .analytic_plan import FULL_COST_ROLES
 
+FULL_COST_FNAMES = {"full_cost_amount", "full_cost_multiplier_snapshot"}
+
 
 class AccountAnalyticLine(models.Model):
     _inherit = "account.analytic.line"
@@ -24,7 +26,10 @@ class AccountAnalyticLine(models.Model):
         currency_field="currency_id",
         readonly=True,
         copy=False,
-        help="Amount after applying the analytic plan full cost multiplier.",
+        help="Amount after spreading the cost of the reproductive plans: "
+        "zero for reproductive lines, the amount times the analytic plan full "
+        "cost multiplier for the expenses (or the revenue, depending on the "
+        "weight basis of the company) of productive plans.",
     )
     full_cost_multiplier_snapshot = fields.Float(
         string="Full Cost Multiplier",
@@ -48,6 +53,13 @@ class AccountAnalyticLine(models.Model):
         return lines
 
     def write(self, vals):
+        if not self.env.context.get("full_cost_recompute"):
+            # The full cost is only written by its recomputation
+            vals = {
+                fname: value
+                for fname, value in vals.items()
+                if fname not in FULL_COST_FNAMES
+            }
         res = super().write(vals)
         if set(self._get_plan_fnames()) & set(vals):
             # Plan columns are dynamic, so they cannot be declared in the
@@ -120,16 +132,32 @@ class AccountAnalyticLine(models.Model):
             return "reproductive"
         return "productive"
 
+    @api.model
+    def _get_full_cost_base_domain(self, company):
+        """Domain of the lines that carry the full cost load: they weight the
+        productive plans and get the multipliers applied."""
+        if company.full_cost_weight_basis == "revenue":
+            return [("amount", ">", 0)]
+        return [("amount", "<", 0)]
+
+    def _is_full_cost_base_line(self):
+        self.ensure_one()
+        if self.company_id.full_cost_weight_basis == "revenue":
+            return self.amount > 0
+        return self.amount < 0
+
     def _get_full_cost_values(self):
         self.ensure_one()
         base_amount = self.amount or 0.0
-        if base_amount > 0:
-            return base_amount, 1.0
         plans = self._get_included_full_cost_plans().with_company(self.company_id)
         if not plans:
             return base_amount, 1.0
         if any(plan.full_cost_role == "reproductive" for plan in plans):
+            # The whole balance of the reproductive plans is spread over the
+            # productive ones
             return 0.0, 0.0
+        if not self._is_full_cost_base_line():
+            return base_amount, 1.0
         multiplier = 1.0
         for plan in plans:
             multiplier *= plan.full_cost_multiplier or 1.0
@@ -145,7 +173,7 @@ class AccountAnalyticLine(models.Model):
             ):
                 lines_by_values[(amount, multiplier)] |= line
         for (amount, multiplier), lines in lines_by_values.items():
-            lines.write(
+            lines.with_context(full_cost_recompute=True).write(
                 {
                     "full_cost_amount": amount,
                     "full_cost_multiplier_snapshot": multiplier,

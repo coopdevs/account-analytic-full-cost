@@ -4,7 +4,8 @@
 from datetime import date
 
 from odoo import fields
-from odoo.exceptions import ValidationError
+from odoo.exceptions import AccessError, ValidationError
+from odoo.service.model import get_public_method
 from odoo.tests import TransactionCase, tagged
 
 
@@ -106,11 +107,11 @@ class TestAnalyticDynamicFullCost(TransactionCase):
         line = self._create_line("Company productive", productive_account, -100.0)
         self._create_line("Company overhead", overhead_account, -100.0)
 
-        self.Plan.recompute_full_cost_multipliers(
+        self.Plan._recompute_full_cost_multipliers(
             company=self.company,
             date_to=self.reference_date,
         )
-        self.Plan.recompute_full_cost_multipliers(
+        self.Plan._recompute_full_cost_multipliers(
             company=other_company,
             date_to=self.reference_date,
         )
@@ -132,7 +133,7 @@ class TestAnalyticDynamicFullCost(TransactionCase):
         overhead_account = self._create_account("Create Overhead", overhead)
         self._create_line("Create productive", productive_account, -100.0)
         self._create_line("Create overhead", overhead_account, -50.0)
-        self.Plan.recompute_full_cost_multipliers(
+        self.Plan._recompute_full_cost_multipliers(
             company=self.company,
             date_to=self.reference_date,
         )
@@ -172,7 +173,7 @@ class TestAnalyticDynamicFullCost(TransactionCase):
         overhead_account = self._create_account("Zero Weight Overhead", overhead)
         overhead_line = self._create_line("Overhead only", overhead_account, -100.0)
 
-        self.Plan.recompute_full_cost_multipliers(
+        self.Plan._recompute_full_cost_multipliers(
             company=self.company,
             date_to=self.reference_date,
         )
@@ -210,7 +211,7 @@ class TestAnalyticDynamicFullCost(TransactionCase):
         )
         self.company.full_cost_period = "monthly"
 
-        self.Plan.recompute_full_cost_multipliers(
+        self.Plan._recompute_full_cost_multipliers(
             company=self.company,
             date_to=self.reference_date,
         )
@@ -259,7 +260,7 @@ class TestAnalyticDynamicFullCost(TransactionCase):
             line_date=today,
         )
 
-        self.Plan.recompute_full_cost_multipliers(
+        self.Plan._recompute_full_cost_multipliers(
             company=False,
             date_to=False,
         )
@@ -413,7 +414,7 @@ class TestAnalyticDynamicFullCost(TransactionCase):
             "Positive analytic amount", child_account, 50.0
         )
 
-        self.Plan.recompute_full_cost_multipliers(
+        self.Plan._recompute_full_cost_multipliers(
             company=self.company,
             date_to=self.reference_date,
         )
@@ -463,7 +464,7 @@ class TestAnalyticDynamicFullCost(TransactionCase):
             "Ignored child cost", ignored_child_account, -700.0
         )
 
-        self.Plan.recompute_full_cost_multipliers(
+        self.Plan._recompute_full_cost_multipliers(
             company=self.company,
             date_to=self.reference_date,
         )
@@ -512,7 +513,7 @@ class TestAnalyticDynamicFullCost(TransactionCase):
             -50.0,
         )
 
-        self.Plan.recompute_full_cost_multipliers(
+        self.Plan._recompute_full_cost_multipliers(
             company=self.company,
             date_to=self.reference_date,
         )
@@ -543,23 +544,174 @@ class TestAnalyticDynamicFullCost(TransactionCase):
         productive_revenue = self._create_line(
             "Productive revenue", productive_account, 200.0
         )
-        self._create_line("Productive expense", productive_account, -1000.0)
-        self._create_line("Overhead revenue", overhead_account, 100.0)
+        productive_expense = self._create_line(
+            "Productive expense", productive_account, -1000.0
+        )
+        overhead_revenue = self._create_line(
+            "Overhead revenue", overhead_account, 20.0
+        )
         overhead_expense = self._create_line(
-            "Overhead expense", overhead_account, -50.0
+            "Overhead expense", overhead_account, -120.0
         )
 
-        self.Plan.recompute_full_cost_multipliers(
+        self.Plan._recompute_full_cost_multipliers(
             company=self.company,
             date_to=self.reference_date,
         )
-        (productive_revenue + overhead_expense).recompute_full_cost_amount()
+        lines = (
+            productive_revenue
+            + productive_expense
+            + overhead_revenue
+            + overhead_expense
+        )
+        lines.recompute_full_cost_amount()
 
-        self.assertAlmostEqual(root.full_cost_multiplier, 1.5)
-        self.assertAlmostEqual(productive.full_cost_multiplier, 1.5)
+        # The net overhead cost (100) is half of the productive revenue (200):
+        # the revenue carries it, the expenses are left untouched
+        self.assertAlmostEqual(root.full_cost_multiplier, 0.5)
+        self.assertAlmostEqual(productive.full_cost_multiplier, 0.5)
         self.assertAlmostEqual(overhead.full_cost_multiplier, 0.0)
-        self.assertAlmostEqual(productive_revenue.full_cost_amount, 200.0)
+        self.assertAlmostEqual(productive_revenue.full_cost_amount, 100.0)
+        self.assertAlmostEqual(productive_expense.full_cost_amount, -1000.0)
+        self.assertAlmostEqual(overhead_revenue.full_cost_amount, 0.0)
         self.assertAlmostEqual(overhead_expense.full_cost_amount, 0.0)
+        self.assertAlmostEqual(
+            sum(lines.mapped("full_cost_amount")), sum(lines.mapped("amount"))
+        )
+
+    def test_revenue_is_spread_proportionally_to_billing(self):
+        self.company.full_cost_weight_basis = "revenue"
+        root = self._create_plan("Billing Root")
+        big = self._create_plan("Billing Big", parent=root)
+        small = self._create_plan("Billing Small", parent=root)
+        overhead = self._create_plan(
+            "Billing Overhead", full_cost_role="reproductive", parent=root
+        )
+        big_line = self._create_line(
+            "Big billing", self._create_account("Billing Big", big), 1000.0
+        )
+        small_line = self._create_line(
+            "Small billing", self._create_account("Billing Small", small), 100.0
+        )
+        self._create_line(
+            "Overhead", self._create_account("Billing Overhead", overhead), -110.0
+        )
+
+        self.Plan._recompute_full_cost_multipliers(
+            company=self.company,
+            date_to=self.reference_date,
+        )
+        (big_line + small_line).recompute_full_cost_amount()
+
+        # Billing ten times more bears ten times more overhead
+        self.assertAlmostEqual(big_line.full_cost_amount, 900.0)
+        self.assertAlmostEqual(small_line.full_cost_amount, 90.0)
+
+    def test_reproductive_net_balance_is_spread(self):
+        root = self._create_plan("Net Balance Root")
+        productive = self._create_plan("Net Balance Productive", parent=root)
+        overhead = self._create_plan(
+            "Net Balance Overhead", full_cost_role="reproductive", parent=root
+        )
+        productive_account = self._create_account(
+            "Net Balance Productive", productive
+        )
+        overhead_account = self._create_account("Net Balance Overhead", overhead)
+        lines = (
+            self._create_line("Productive cost", productive_account, -200.0)
+            + self._create_line("Productive revenue", productive_account, 300.0)
+            + self._create_line("Overhead cost", overhead_account, -150.0)
+            + self._create_line("Overhead revenue", overhead_account, 50.0)
+        )
+
+        self.Plan._recompute_full_cost_multipliers(
+            company=self.company,
+            date_to=self.reference_date,
+        )
+        lines.recompute_full_cost_amount()
+
+        # Net overhead cost: 150 - 50 = 100, spread over 200 of expenses
+        self.assertAlmostEqual(productive.full_cost_multiplier, 1.5)
+        self.assertEqual(
+            lines.mapped("full_cost_amount"), [-300.0, 300.0, 0.0, 0.0]
+        )
+        self.assertAlmostEqual(
+            sum(lines.mapped("full_cost_amount")), sum(lines.mapped("amount"))
+        )
+
+    def test_cost_without_base_lines_goes_up_one_level(self):
+        root = self._create_plan("Push Up Root")
+        worked = self._create_plan("Push Up Worked", parent=root)
+        empty = self._create_plan("Push Up Empty", parent=root)
+        empty_overhead = self._create_plan(
+            "Push Up Empty Overhead", full_cost_role="reproductive", parent=empty
+        )
+        worked_line = self._create_line(
+            "Worked cost", self._create_account("Push Up Worked", worked), -100.0
+        )
+        overhead_line = self._create_line(
+            "Orphan overhead",
+            self._create_account("Push Up Empty Overhead", empty_overhead),
+            -40.0,
+        )
+
+        self.Plan._recompute_full_cost_multipliers(
+            company=self.company,
+            date_to=self.reference_date,
+        )
+        (worked_line + overhead_line).recompute_full_cost_amount()
+
+        # The empty plan has no expenses to carry its overhead, so the root
+        # level spreads it over the rest of the plans
+        self.assertAlmostEqual(worked.full_cost_multiplier, 1.4)
+        self.assertAlmostEqual(worked_line.full_cost_amount, -140.0)
+        self.assertAlmostEqual(overhead_line.full_cost_amount, 0.0)
+
+    def test_root_overhead_is_spread_over_productive_expenses_only(self):
+        root = self._create_plan("Levels Root")
+        loaded = self._create_plan("Levels Loaded", parent=root)
+        loaded_overhead = self._create_plan(
+            "Levels Loaded Overhead", full_cost_role="reproductive", parent=loaded
+        )
+        plain = self._create_plan("Levels Plain", parent=root)
+        structure = self._create_plan(
+            "Levels Structure", full_cost_role="reproductive", parent=root
+        )
+        lines = (
+            self._create_line(
+                "Loaded cost", self._create_account("Levels Loaded", loaded), -100.0
+            )
+            + self._create_line(
+                "Loaded overhead",
+                self._create_account("Levels Loaded Overhead", loaded_overhead),
+                -100.0,
+            )
+            + self._create_line(
+                "Plain cost", self._create_account("Levels Plain", plain), -100.0
+            )
+            + self._create_line(
+                "Structure",
+                self._create_account("Levels Structure", structure),
+                -100.0,
+            )
+        )
+
+        self.Plan._recompute_full_cost_multipliers(
+            company=self.company,
+            date_to=self.reference_date,
+        )
+        lines.recompute_full_cost_amount()
+
+        # The structure goes half and half (same productive expenses), and the
+        # loaded plan also carries its own overhead
+        self.assertAlmostEqual(loaded.full_cost_multiplier, 2.5)
+        self.assertAlmostEqual(plain.full_cost_multiplier, 1.5)
+        self.assertEqual(
+            lines.mapped("full_cost_amount"), [-250.0, 0.0, -150.0, 0.0]
+        )
+        self.assertAlmostEqual(
+            sum(lines.mapped("full_cost_amount")), sum(lines.mapped("amount"))
+        )
 
     def test_full_cost_period_start(self):
         self.company.full_cost_period = "biannual"
@@ -595,6 +747,24 @@ class TestAnalyticDynamicFullCost(TransactionCase):
         self.assertEqual(
             self.Plan._get_full_cost_period_start(self.company, self.reference_date),
             date(2025, 5, 6),
+        )
+
+        self.company.write(
+            {
+                "full_cost_period": "fiscal_year",
+                "fiscalyear_last_month": "12",
+                "fiscalyear_last_day": 31,
+            }
+        )
+        self.assertEqual(
+            self.Plan._get_full_cost_period_start(self.company, self.reference_date),
+            date(2025, 1, 1),
+        )
+
+        self.company.write({"fiscalyear_last_month": "6", "fiscalyear_last_day": 30})
+        self.assertEqual(
+            self.Plan._get_full_cost_period_start(self.company, self.reference_date),
+            date(2024, 7, 1),
         )
 
     def test_full_cost_window_search_uses_company_configuration(self):
@@ -734,7 +904,7 @@ class TestAnalyticDynamicFullCost(TransactionCase):
             + self._create_line("Revenue", accounts[line_a_projects], 500.0)
         )
 
-        self.Plan.recompute_full_cost_multipliers(
+        self.Plan._recompute_full_cost_multipliers(
             company=self.company,
             date_to=self.reference_date,
         )
@@ -743,10 +913,10 @@ class TestAnalyticDynamicFullCost(TransactionCase):
             full_cost_analysis_date=self.reference_date
         ).search([("line_id", "in", lines.ids)])
 
-        # root: (200 + 75) / 200, line A: (150 + 50) / 150
-        self.assertAlmostEqual(root.full_cost_multiplier, 1.375)
-        self.assertAlmostEqual(line_a.full_cost_multiplier, 1.375 * 4 / 3)
-        self.assertAlmostEqual(line_a_projects.full_cost_multiplier, 1.375 * 4 / 3)
+        # The rates of the levels add up: root 75 / 150, line A 50 / 150
+        self.assertAlmostEqual(root.full_cost_multiplier, 1.5)
+        self.assertAlmostEqual(line_a.full_cost_multiplier, 1.5 + 1 / 3)
+        self.assertAlmostEqual(line_a_projects.full_cost_multiplier, 1.5 + 1 / 3)
         self.assertEqual(len(report), len(lines))
         for report_line in report:
             line = report_line.line_id
@@ -767,3 +937,107 @@ class TestAnalyticDynamicFullCost(TransactionCase):
             )),
             -275.0,
         )
+
+    def test_settings_are_stored_on_the_company(self):
+        settings = self.env["res.config.settings"].create(
+            {
+                "full_cost_period": "fiscal_year",
+                "full_cost_weight_basis": "revenue",
+            }
+        )
+        settings.execute()
+
+        self.assertEqual(self.company.full_cost_period, "fiscal_year")
+        self.assertEqual(self.company.full_cost_weight_basis, "revenue")
+
+    def test_multipliers_cannot_be_recomputed_through_rpc(self):
+        with self.assertRaises(AttributeError):
+            get_public_method(self.Plan, "recompute_full_cost_multipliers")
+        with self.assertRaises(AccessError):
+            get_public_method(self.Plan, "_recompute_full_cost_multipliers")
+
+    def test_full_cost_cannot_be_written_directly(self):
+        root = self._create_plan("Forged Root")
+        productive = self._create_plan("Forged Productive", parent=root)
+        overhead = self._create_plan(
+            "Forged Overhead", full_cost_role="reproductive", parent=root
+        )
+        productive_account = self._create_account("Forged Productive", productive)
+        self._create_line(
+            "Forged overhead", self._create_account("Forged Overhead", overhead), -50.0
+        )
+        self._create_line("Forged base", productive_account, -100.0)
+        self.Plan._recompute_full_cost_multipliers(
+            company=self.company,
+            date_to=self.reference_date,
+        )
+        line = self.Line.create(
+            {
+                "name": "Forged line",
+                "date": self.reference_date,
+                "company_id": self.company.id,
+                root._column_name(): productive_account.id,
+                "amount": -10.0,
+                "full_cost_amount": -999.0,
+            }
+        )
+        self.assertAlmostEqual(line.full_cost_amount, -15.0)
+
+        line.write({"full_cost_amount": -999.0, "full_cost_multiplier_snapshot": 9.0})
+
+        self.assertAlmostEqual(line.full_cost_amount, -15.0)
+        self.assertAlmostEqual(line.full_cost_multiplier_snapshot, 1.5)
+
+    def test_historical_report_respects_analytic_line_rules(self):
+        root = self._create_plan("Restricted Root")
+        productive = self._create_plan("Restricted Productive", parent=root)
+        overhead = self._create_plan(
+            "Restricted Overhead", full_cost_role="reproductive", parent=root
+        )
+        visible_line = self._create_line(
+            "Visible productive",
+            self._create_account("Restricted Productive", productive),
+            -100.0,
+        )
+        hidden_line = self._create_line(
+            "Hidden overhead",
+            self._create_account("Restricted Overhead", overhead),
+            -50.0,
+        )
+        restricted_group = self.env["res.groups"].create(
+            {"name": "Restricted analytic lines"}
+        )
+        self.env["ir.rule"].create(
+            {
+                "name": "Hide some analytic lines",
+                "model_id": self.env["ir.model"]._get_id("account.analytic.line"),
+                "groups": [(4, restricted_group.id)],
+                "domain_force": "[('name', '!=', 'Hidden overhead')]",
+            }
+        )
+        user = self.env["res.users"].create(
+            {
+                "name": "Restricted analytic user",
+                "login": "restricted_analytic_user",
+                "company_id": self.company.id,
+                "company_ids": [(6, 0, self.company.ids)],
+                "groups_id": [
+                    # No accounting group: their rules would show every line
+                    (4, self.env.ref("base.group_user").id),
+                    (4, self.env.ref("analytic.group_analytic_accounting").id),
+                    (4, restricted_group.id),
+                ],
+            }
+        )
+        report = self.Report.with_user(user).with_context(
+            full_cost_analysis_date=self.reference_date
+        )
+
+        report_lines = report.search([("company_id", "=", self.company.id)])
+
+        self.assertIn(visible_line.id, report_lines.mapped("line_id").ids)
+        self.assertNotIn(hidden_line.id, report_lines.mapped("line_id").ids)
+        self.assertFalse(report.browse(hidden_line.id).exists())
+        # The hidden line still weights the multipliers
+        visible = report_lines.filtered(lambda item: item.line_id == visible_line)
+        self.assertAlmostEqual(visible.full_cost_amount, -150.0)
