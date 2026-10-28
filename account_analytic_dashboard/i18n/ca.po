@@ -1,0 +1,283 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_analytic_dashboard
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-28 10:38+0000\n"
+"PO-Revision-Date: 2026-10-27 22:17+0000\n"
+"Last-Translator: \n"
+"Language: ca\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#. module: account_analytic_dashboard
+#. odoo-javascript
+#: code:addons/account_analytic_dashboard/data/files/analytic_dashboard.json:0
+msgid "Amount"
+msgstr "Import"
+
+#. module: account_analytic_dashboard
+#: model:ir.model.fields,help:account_analytic_dashboard.field_account_analytic_line__amount_expense
+msgid ""
+"Amount of the line when it is negative (kept negative, so that revenue plus "
+"expenses is the amount)."
+msgstr ""
+"Import de la línia quan és negatiu (es manté negatiu, de manera que "
+"ingressos més despeses és l'import)."
+
+#. module: account_analytic_dashboard
+#: model:ir.model.fields,help:account_analytic_dashboard.field_account_analytic_line__amount_revenue
+msgid "Amount of the line when it is positive."
+msgstr "Import de la línia quan és positiu."
+
+#. module: account_analytic_dashboard
+#: model:ir.model,name:account_analytic_dashboard.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Línia analítica"
+
+#. module: account_analytic_dashboard
+#. odoo-javascript
+#: code:addons/account_analytic_dashboard/data/files/analytic_dashboard.json:0
+msgid "Analytic account"
+msgstr "Compte analític"
+
+#. module: account_analytic_dashboard
+#: model:spreadsheet.dashboard,name:account_analytic_dashboard.dashboard_analytic
+msgid "Analytics"
+msgstr "Analítica"
+
+#. module: account_analytic_dashboard
+#. odoo-javascript
+#: code:addons/account_analytic_dashboard/data/files/analytic_dashboard.json:0
+#: model:ir.model.fields,field_description:account_analytic_dashboard.field_account_analytic_line__amount_expense
+msgid "Expenses"
+msgstr "Despeses"
+
+#. module: account_analytic_dashboard
+#. odoo-javascript
+#: code:addons/account_analytic_dashboard/data/files/analytic_dashboard.json:0
+msgid "KPI - Expenses"
+msgstr "KPI - Despeses"
+
+#. module: account_analytic_dashboard
+#. odoo-javascript
+#: code:addons/account_analytic_dashboard/data/files/analytic_dashboard.json:0
+msgid "KPI - Margin"
+msgstr "KPI - Marge"
+
+#. module: account_analytic_dashboard
+#. odoo-javascript
+#: code:addons/account_analytic_dashboard/data/files/analytic_dashboard.json:0
+msgid "KPI - Result"
+msgstr "KPI - Resultat"
+
+#. module: account_analytic_dashboard
+#. odoo-javascript
+#: code:addons/account_analytic_dashboard/data/files/analytic_dashboard.json:0
+msgid "KPI - Revenue"
+msgstr "KPI - Ingressos"
+
+#. module: account_analytic_dashboard
+#. odoo-javascript
+#: code:addons/account_analytic_dashboard/data/files/analytic_dashboard.json:0
+msgid "Line"
+msgstr "Línia"
+
+#. module: account_analytic_dashboard
+#. odoo-javascript
+#: code:addons/account_analytic_dashboard/data/files/analytic_dashboard.json:0
+msgid "Margin"
+msgstr "Marge"
+
+#. module: account_analytic_dashboard
+#. odoo-javascript
+#: code:addons/account_analytic_dashboard/data/files/analytic_dashboard.json:0
+msgid "Month"
+msgstr "Mes"
+
+#. module: account_analytic_dashboard
+#: model:ir.actions.act_window,name:account_analytic_dashboard.action_analytic_monthly_report
+#: model:ir.ui.menu,name:account_analytic_dashboard.menu_analytic_monthly_report
+msgid "Monthly Analytics"
+msgstr "Analítica mensual"
+
+#. module: account_analytic_dashboard
+#. odoo-javascript
+#: code:addons/account_analytic_dashboard/data/files/analytic_dashboard.json:0
+msgid "Monthly result by line"
+msgstr "Resultat mensual per línia"
+
+#. module: account_analytic_dashboard
+#: model_terms:ir.actions.act_window,help:account_analytic_dashboard.action_analytic_monthly_report
+msgid "No analytic items yet"
+msgstr "Encara no hi ha apunts analítics"
+
+#. module: account_analytic_dashboard
+#. odoo-javascript
+#: code:addons/account_analytic_dashboard/data/files/analytic_dashboard.json:0
+msgid "Period"
+msgstr "Període"
+
+#. module: account_analytic_dashboard
+#. odoo-javascript
+#: code:addons/account_analytic_dashboard/data/files/analytic_dashboard.json:0
+msgid "Result"
+msgstr "Resultat"
+
+#. module: account_analytic_dashboard
+#. odoo-javascript
+#: code:addons/account_analytic_dashboard/data/files/analytic_dashboard.json:0
+msgid "Result by line"
+msgstr "Resultat per línia"
+
+#. module: account_analytic_dashboard
+#. odoo-javascript
+#: code:addons/account_analytic_dashboard/data/files/analytic_dashboard.json:0
+#: model:ir.model.fields,field_description:account_analytic_dashboard.field_account_analytic_line__amount_revenue
+msgid "Revenue"
+msgstr "Ingressos"
+
+#. module: account_analytic_dashboard
+#. odoo-javascript
+#: code:addons/account_analytic_dashboard/data/files/analytic_dashboard.json:0
+msgid "Revenue and expenses by month"
+msgstr "Ingressos i despeses per mes"
+
+#. module: account_analytic_dashboard
+#: model_terms:ir.actions.act_window,help:account_analytic_dashboard.action_analytic_monthly_report
+msgid ""
+"Revenue and expenses of every analytic plan and account, month by month, "
+"with the totals of each level of the plan hierarchy."
+msgstr ""
+"Ingressos i despeses de cada pla i compte analític, mes a mes, amb els "
+"totals de cada nivell de la jerarquia de plans."
+
+#. module: account_analytic_dashboard
+#. odoo-javascript
+#: code:addons/account_analytic_dashboard/data/files/analytic_dashboard.json:0
+msgid "Top expenses"
+msgstr "Comptes amb més despeses"
+
+#. module: account_analytic_dashboard
+#. odoo-javascript
+#: code:addons/account_analytic_dashboard/data/files/analytic_dashboard.json:0
+msgid "Top revenue"
+msgstr "Comptes amb més ingressos"
+
+#. module: account_analytic_dashboard
+#. odoo-javascript
+#: code:addons/account_analytic_dashboard/data/files/analytic_dashboard.json:0
+msgid "Total"
+msgstr "Total"
+
+#. module: account_analytic_dashboard
+#: model:ir.model.fields.selection,name:account_analytic_dashboard.selection__res_company__analytic_report_personnel_cost__accounting
+msgid "Accounting"
+msgstr "Comptabilitat"
+
+#. module: account_analytic_dashboard
+#: model:ir.model.fields.selection,name:account_analytic_dashboard.selection__res_company__analytic_report_personnel_cost__all
+msgid "All analytic lines"
+msgstr "Tots els apunts analítics"
+
+#. module: account_analytic_dashboard
+#: model:ir.model.fields,field_description:account_analytic_dashboard.field_res_company__analytic_report_personnel_account_ids
+#: model:ir.model.fields,field_description:account_analytic_dashboard.field_res_config_settings__analytic_report_personnel_account_ids
+msgid "Analytic Personnel Accounts"
+msgstr "Comptes de personal per a l'analítica"
+
+#. module: account_analytic_dashboard
+#: model:ir.model.fields,field_description:account_analytic_dashboard.field_res_company__analytic_report_personnel_cost
+#: model:ir.model.fields,field_description:account_analytic_dashboard.field_res_config_settings__analytic_report_personnel_cost
+msgid "Analytic Personnel Cost Source"
+msgstr "Origen del cost de personal a l'analítica"
+
+#. module: account_analytic_dashboard
+#: model:ir.model,name:account_analytic_dashboard.model_res_company
+msgid "Companies"
+msgstr "Companyies"
+
+#. module: account_analytic_dashboard
+#: model:ir.model,name:account_analytic_dashboard.model_res_config_settings
+msgid "Config Settings"
+msgstr "Paràmetres de configuració"
+
+#. module: account_analytic_dashboard
+#: model_terms:ir.ui.view,arch_db:account_analytic_dashboard.res_config_settings_view_form_analytic_report
+msgid ""
+"Count the personnel cost once when it reaches the analytic accounting "
+"through both the payroll and the timesheets"
+msgstr ""
+"Compta el cost de personal una sola vegada quan arriba a l'analítica tant "
+"per la nòmina com pels fulls d'hores"
+
+#. module: account_analytic_dashboard
+#: model:ir.model.fields,help:account_analytic_dashboard.field_res_company__analytic_report_personnel_account_ids
+#: model:ir.model.fields,help:account_analytic_dashboard.field_res_config_settings__analytic_report_personnel_account_ids
+msgid ""
+"Financial accounts of the personnel cost, ignored by the analytic reports "
+"when the timesheets carry the personnel cost."
+msgstr ""
+"Comptes comptables del cost de personal, que els informes analítics ignoren "
+"quan el cost de personal el porten els fulls d'hores."
+
+#. module: account_analytic_dashboard
+#: model:ir.model.fields,field_description:account_analytic_dashboard.field_account_analytic_line__analytic_report_included
+msgid "Included in Analytic Reports"
+msgstr "Inclòs als informes analítics"
+
+#. module: account_analytic_dashboard
+#: model_terms:ir.ui.view,arch_db:account_analytic_dashboard.res_config_settings_view_form_analytic_report
+msgid "Personnel Cost in Analytic Reports"
+msgstr "Cost de personal als informes analítics"
+
+#. module: account_analytic_dashboard
+#: model_terms:ir.ui.view,arch_db:account_analytic_dashboard.res_config_settings_view_form_analytic_report
+msgid "Personnel accounts"
+msgstr "Comptes de personal"
+
+#. module: account_analytic_dashboard
+#: model_terms:ir.ui.view,arch_db:account_analytic_dashboard.res_config_settings_view_form_analytic_report
+msgid "Source"
+msgstr "Origen"
+
+#. module: account_analytic_dashboard
+#: model:ir.model.fields.selection,name:account_analytic_dashboard.selection__res_company__analytic_report_personnel_cost__timesheets
+msgid "Timesheets"
+msgstr "Fulls d'hores"
+
+#. module: account_analytic_dashboard
+#. odoo-python
+#: code:addons/account_analytic_dashboard/models/account_analytic_line.py:0
+msgid "Unsupported operator %s"
+msgstr "Operador %s no admès"
+
+#. module: account_analytic_dashboard
+#: model:ir.model.fields,help:account_analytic_dashboard.field_res_company__analytic_report_personnel_cost
+#: model:ir.model.fields,help:account_analytic_dashboard.field_res_config_settings__analytic_report_personnel_cost
+msgid ""
+"When the personnel cost reaches the analytic accounting both through the payroll entries and the valued timesheets, the analytic reports must count only one of them.\n"
+"\n"
+"- Accounting: analytic lines without financial account, such as the timesheets, are ignored.\n"
+"- Timesheets: analytic lines of the personnel accounts are ignored, the timesheets carry the personnel cost.\n"
+"- All analytic lines: nothing is ignored."
+msgstr ""
+"Quan el cost de personal arriba a l'analítica tant pels assentaments de nòmina com pels fulls d'hores valorats, els informes analítics només n'han de comptar un.\n"
+"\n"
+"- Comptabilitat: s'ignoren els apunts analítics sense compte comptable, com els fulls d'hores.\n"
+"- Fulls d'hores: s'ignoren els apunts analítics dels comptes de personal; el cost de personal el porten els fulls d'hores.\n"
+"- Tots els apunts analítics: no s'ignora res."
+
+#. module: account_analytic_dashboard
+#: model:ir.model.fields,help:account_analytic_dashboard.field_account_analytic_line__analytic_report_included
+msgid ""
+"Whether the line counts in the analytic reports, according to the personnel "
+"cost source of its company."
+msgstr ""
+"Si l'apunt compta als informes analítics, segons l'origen del cost de "
+"personal de la seva companyia."

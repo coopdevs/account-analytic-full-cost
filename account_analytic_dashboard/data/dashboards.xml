@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="dashboard_analytic" model="spreadsheet.dashboard">
+        <field name="name">Analytics</field>
+        <field
+            name="spreadsheet_binary_data"
+            type="base64"
+            file="account_analytic_dashboard/data/files/analytic_dashboard.json"
+        />
+        <field
+            name="main_data_model_ids"
+            eval="[(4, ref('analytic.model_account_analytic_line'))]"
+        />
+        <field
+            name="dashboard_group_id"
+            ref="spreadsheet_dashboard.spreadsheet_dashboard_group_finance"
+        />
+        <field
+            name="group_ids"
+            eval="[Command.link(ref('analytic.group_analytic_accounting'))]"
+        />
+        <field name="sequence">30</field>
+        <field name="is_published">True</field>
+    </record>
+</odoo>

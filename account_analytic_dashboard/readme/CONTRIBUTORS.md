@@ -1,0 +1,1 @@
+- Quim Rebull \<<quim@coopdevs.org>\>

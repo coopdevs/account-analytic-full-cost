@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="res_config_settings_view_form_analytic_report" model="ir.ui.view">
+        <field name="name">res.config.settings.form.analytic.report</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <setting id="track_costs_revenues" position="after">
+                <setting
+                    id="analytic_report_personnel_cost"
+                    string="Personnel Cost in Analytic Reports"
+                    company_dependent="1"
+                    help="Count the personnel cost once when it reaches the analytic accounting through both the payroll and the timesheets"
+                    invisible="not group_analytic_accounting"
+                >
+                    <div class="content-group">
+                        <div class="row mt16">
+                            <label
+                                for="analytic_report_personnel_cost"
+                                string="Source"
+                                class="col-lg-4 o_light_label"
+                            />
+                            <field name="analytic_report_personnel_cost" />
+                        </div>
+                        <div
+                            class="row"
+                            invisible="analytic_report_personnel_cost != 'timesheets'"
+                        >
+                            <label
+                                for="analytic_report_personnel_account_ids"
+                                string="Personnel accounts"
+                                class="col-lg-4 o_light_label"
+                            />
+                            <field
+                                name="analytic_report_personnel_account_ids"
+                                widget="many2many_tags"
+                            />
+                        </div>
+                    </div>
+                </setting>
+            </setting>
+        </field>
+    </record>
+</odoo>
